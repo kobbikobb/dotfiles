@@ -2,4 +2,5 @@
 
 - Setup simlinks with [Stow](https://www.gnu.org/software/stow/manual/stow.html)
 - brew install stow
-- sudo stow dotfiles
+- Clone the repo and navigate into it
+    - stow .
