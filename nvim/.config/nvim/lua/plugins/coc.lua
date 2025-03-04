@@ -7,6 +7,7 @@ return {
             'coc-tsserver',
             'coc-eslint',
             'coc-prettier',
+            'coc-kotlin'
         }
     end
 }

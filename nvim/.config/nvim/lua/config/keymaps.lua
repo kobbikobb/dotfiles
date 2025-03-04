@@ -14,6 +14,10 @@ vim.keymap.set('n', '<leader>nc', ':NvimTreeCollapse<CR>', { noremap = true, sil
 
 -- Coc mapping
 vim.api.nvim_set_keymap("i", "<Enter>", [[pumvisible() ? coc#_select_confirm() : "\<CR>"]], { expr = true, noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "gd", "<Plug>(coc-definition)", { silent = true, nowait = true })
+vim.api.nvim_set_keymap("n", "gy", "<Plug>(coc-type-definition)", { silent = true, nowait = true })
+vim.api.nvim_set_keymap("n", "gi", "<Plug>(coc-implementation)", { silent = true, nowait = true })
+vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-references)", { silent = true, nowait = true })
 
 -- Telescope maps 
 local builtin = require('telescope.builtin')

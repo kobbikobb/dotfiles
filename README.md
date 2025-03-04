@@ -4,3 +4,7 @@
 - brew install stow
 - Clone the repo and navigate into it
     - stow .
+    - or ...
+    - stow -t ~ nvim
+    - stow -t ~ tmux
+    - stow -t ~ zshrc
