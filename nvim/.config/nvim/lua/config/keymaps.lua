@@ -31,6 +31,16 @@ vim.api.nvim_set_keymap("v", "<leader>p", "<Plug>(coc-format-selected)", { silen
 vim.api.nvim_set_keymap("n", "<leader>p", "<Plug>(coc-format-selected)", { silent = true })
 vim.api.nvim_set_keymap("n", "<leader>P", "<cmd>CocCommand editor.action.formatDocument<CR>", { noremap = true, silent = true })
 
+-- Noetest
+local neotest = require("neotest")
+
+vim.keymap.set("n", "<leader>tn", function() neotest.run.run() end, { desc = "Run nearest test" })
+vim.keymap.set("n", "<leader>tf", function() neotest.run.run(vim.fn.expand("%")) end, { desc = "Run current file" })
+vim.keymap.set("n", "<leader>td", function() neotest.run.run({ strategy = "dap" }) end, { desc = "Debug nearest test" })
+vim.keymap.set("n", "<leader>ts", function() neotest.run.stop() end, { desc = "Stop nearest test" })
+vim.keymap.set("n", "<leader>ta", function() neotest.run.attach() end, { desc = "Attach to nearest test" })
+vim.keymap.set("n", "<leader>ts", function() neotest.summary.toggle() end, { desc = "Toggle summary" })
+
 -- Comment out and in
 vim.api.nvim_set_keymap('v', '<leader>/', ':<C-u>lua ToggleComment()<CR>', { noremap = true, silent = true })
 
