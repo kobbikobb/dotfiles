@@ -18,6 +18,7 @@ vim.api.nvim_set_keymap("n", "gd", "<Plug>(coc-definition)", { silent = true, no
 vim.api.nvim_set_keymap("n", "gy", "<Plug>(coc-type-definition)", { silent = true, nowait = true })
 vim.api.nvim_set_keymap("n", "gi", "<Plug>(coc-implementation)", { silent = true, nowait = true })
 vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-references)", { silent = true, nowait = true })
+vim.api.nvim_set_keymap('n', '<leader>ca', '<Plug>(coc-codeaction)', { noremap = true, silent = true })
 
 -- Telescope maps 
 local builtin = require('telescope.builtin')

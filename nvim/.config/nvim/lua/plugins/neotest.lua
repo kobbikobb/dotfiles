@@ -7,7 +7,7 @@ return  {
         "nvim-treesitter/nvim-treesitter",
         "nvim-neotest/neotest-jest",
         "marilari88/neotest-vitest",
-        "codymikol/neotest-kotlin"
+        "weilbith/neotest-gradle"
     },
     config = function()
         require('neotest').setup({
@@ -19,7 +19,7 @@ return  {
                     end,
                 }),
                 require("neotest-vitest"),
-                require("neotest-kotest")
+                require('neotest-gradle')
             }
         })
     end
