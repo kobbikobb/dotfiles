@@ -4,7 +4,7 @@ return {
     config = function()
         require('telescope').setup{
             defaults = {
-                file_ignore_patterns = {"node_modules", "dist"}
+                file_ignore_patterns = {"node_modules/", "dist/", "bin/"}
             }
         }
     end
