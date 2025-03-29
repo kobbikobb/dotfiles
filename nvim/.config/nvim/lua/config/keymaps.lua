@@ -26,6 +26,7 @@ vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find f
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+vim.keymap.set('n', '<leader>fc', builtin.git_status, { desc = 'Telescope git status' })
 
 -- Prettier
 vim.api.nvim_set_keymap("v", "<leader>p", "<Plug>(coc-format-selected)", { silent = true })
@@ -55,32 +56,4 @@ vim.keymap.set("n", "<leader>hh", function() hui.nav_file(1) end, { desc = "Nav 
 vim.keymap.set("n", "<leader>hj", function() hui.nav_file(2) end, { desc = "Nav to 2" })
 vim.keymap.set("n", "<leader>hk", function() hui.nav_file(3) end, { desc = "Nav to 3" })
 vim.keymap.set("n", "<leader>hl", function() hui.nav_file(4) end, { desc = "Nav to 4" })
-
--- Comment out and in
-vim.api.nvim_set_keymap('v', '<leader>/', ':<C-u>lua ToggleComment()<CR>', { noremap = true, silent = true })
-
-function ToggleComment()
-    local start_line = vim.fn.line("'<")
-    local end_line = vim.fn.line("'>")
-
-    local lines = vim.fn.getline(start_line, end_line)
-    local all_commented = true
-
-    for _, line in ipairs(lines) do
-        if not line:match("^%s*//") then
-            all_commented = false
-            break
-        end
-    end
-
-    for i, line in ipairs(lines) do
-        if all_commented then
-            lines[i] = line:gsub("^%s*//%s?", "")
-        else
-            lines[i] = "// " .. line
-        end
-    end
-
-    vim.fn.setline(start_line, lines)
-end
 
