@@ -1,7 +1,8 @@
 return {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
-      "nvim-treesitter/nvim-treesitter-refactor",
+        'nvim-treesitter/nvim-treesitter-refactor',
+        'piersolenski/telescope-import.nvim',
     },
     build = ":TSUpdate",
     config = function()
@@ -37,5 +38,6 @@ return {
                 }
             }
         }
+        require("telescope").load_extension("import")
     end
 }
