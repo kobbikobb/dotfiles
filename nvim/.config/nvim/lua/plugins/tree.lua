@@ -11,6 +11,10 @@ return {
             filters = {
                 custom = {'node_modules', 'bin', 'dist', '__pycache__', '.idea', '.vscode'},
             },
+            view = {
+                width = 35,
+                relativenumber = true
+            },
             update_focused_file = {
                 enable = true,
                 update_cwd = true
