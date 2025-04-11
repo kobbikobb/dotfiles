@@ -31,14 +31,6 @@ vim.keymap.set('n', '<leader>nf', ':NvimTreeFocus<CR>', { noremap = true, silent
 vim.keymap.set('n', '<leader>nn', ':NvimTreeFindFile<CR>', { noremap = true, silent = true, desc = 'Filter on file in tree' })
 vim.keymap.set('n', '<leader>nc', ':NvimTreeCollapse<CR>', { noremap = true, silent = true, desc = 'Close file tree' })
 
--- Coc mapping
-vim.api.nvim_set_keymap("i", "<Enter>", [[pumvisible() ? coc#_select_confirm() : "\<CR>"]], { expr = true, noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "gd", "<Plug>(coc-definition)", { silent = true, nowait = true })
-vim.api.nvim_set_keymap("n", "gy", "<Plug>(coc-type-definition)", { silent = true, nowait = true })
-vim.api.nvim_set_keymap("n", "gi", "<Plug>(coc-implementation)", { silent = true, nowait = true })
-vim.api.nvim_set_keymap("n", "gr", "<Plug>(coc-references)", { silent = true, nowait = true })
-vim.api.nvim_set_keymap('n', '<leader>ca', '<Plug>(coc-codeaction)', { noremap = true, silent = true })
-
 -- Telescope maps 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
