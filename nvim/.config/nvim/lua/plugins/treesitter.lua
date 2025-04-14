@@ -1,18 +1,45 @@
 return {
-    'nvim-treesitter/nvim-treesitter',
+    "nvim-treesitter/nvim-treesitter",
     dependencies = {
-        'nvim-treesitter/nvim-treesitter-refactor',
-        'piersolenski/telescope-import.nvim',
+        "nvim-treesitter/nvim-treesitter-refactor",
+        "piersolenski/telescope-import.nvim",
+        "windwp/nvim-ts-autotag",
     },
+    event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
     config = function()
-        require'nvim-treesitter.configs'.setup {
-            ensure_installed = { "lua", "vim", "markdown", "javascript", "typescript", "kotlin"}, 
+       
+        local treesitter = require("nvim-treesitter.configs")
+
+        treesitter.setup {
+            ensure_installed = {
+                "lua",
+                "vim",
+                "markdown",
+                "html",
+                "javascript",
+                "typescript",
+                "kotlin",
+                "java",
+                "python"
+            },
             sync_install = false,
             auto_install = true,
             indent = { enable = true },
             highlight = {
                 enable = true,
+            },
+            autotag = {
+                enable = true,
+            },
+            incremental_selection = {
+                enable = true,
+                keymaps = {
+                    init_selection = "<C-space>",
+                    node_incremental = "<C-space>",
+                    scope_incremental = false,
+                    node_decremental = "<bs>",
+                },
             },
             refactor = {
                 highlight_definitions = {
