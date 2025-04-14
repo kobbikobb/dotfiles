@@ -26,6 +26,7 @@ return {
 				gs.blame_line({ full = true })
 			end, "Blame line")
 			map("n", "<leader>hB", gs.toggle_current_line_blame, "Toggle line blame")
+			map("n", "<leader>hl", gs.blame, "Blame for file")
 			map("n", "<leader>hd", gs.diffthis, "Diff this")
 			map("n", "<leader>hD", function()
 				gs.diffthis("~")
