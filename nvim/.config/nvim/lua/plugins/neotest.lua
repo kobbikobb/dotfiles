@@ -10,16 +10,16 @@ return  {
         "weilbith/neotest-gradle"
     },
     config = function()
-        require('neotest').setup({
+        require("neotest").setup({
             adapters = {
-                require('neotest-jest')({
+                require("neotest-jest")({
                     jestCommand = "npm test --",
                     cwd = function(path)
                         return vim.fn.getcwd()
                     end,
                 }),
                 require("neotest-vitest"),
-                require('neotest-gradle')
+                require("neotest-gradle")
             }
         })
     end

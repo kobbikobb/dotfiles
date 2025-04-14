@@ -7,8 +7,6 @@ return {
 
     local keymap = vim.keymap
 
-    -- TODO: DO it to it
-
     keymap.set("n", "]t", function()
       todo_comments.jump_next()
     end, { desc = "Next todo comment" })
