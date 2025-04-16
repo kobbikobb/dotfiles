@@ -17,6 +17,8 @@ return {
 			callback = function(ev)
 				local opts = { buffer = ev.buf, silent = true }
 
+				-- TODO: Why is this not showing up in WhichKey?
+
 				opts.desc = "Show LSP references"
 				keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
 

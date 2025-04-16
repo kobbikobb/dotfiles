@@ -10,7 +10,7 @@ vim.opt.termguicolors = true
 vim.opt.background = "dark"
 vim.opt.signcolumn = "yes"
 vim.opt.backupcopy = "yes"
-  
+
 vim.wo.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
@@ -18,7 +18,7 @@ vim.opt.wrap = false
 
 -- search
 vim.opt.ignorecase = true
-vim.opt.smartcase = true 
+vim.opt.smartcase = true
 
 vim.opt.backspace = "indent,eol,start"
 vim.opt.clipboard:append("unnamedplus") -- system clipboard

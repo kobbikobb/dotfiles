@@ -30,6 +30,7 @@ return {
 				"pyright",
 				"jdtls",
 				"kotlin_language_server",
+				"terraform-ls",
 			},
 		})
 
@@ -41,6 +42,7 @@ return {
 				"black",
 				"pylint",
 				"eslint_d",
+				"tflint",
 			},
 		})
 	end,
