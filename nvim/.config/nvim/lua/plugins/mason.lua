@@ -30,7 +30,7 @@ return {
 				"pyright",
 				"jdtls",
 				"kotlin_language_server",
-				"terraform-ls",
+				"terraformls",
 			},
 		})
 
