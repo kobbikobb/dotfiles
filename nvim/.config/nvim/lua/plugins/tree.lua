@@ -20,5 +20,31 @@ return {
 				update_cwd = true,
 			},
 		})
+
+		-- Tree maps
+		vim.keymap.set(
+			"n",
+			"<leader>nt",
+			":NvimTreeToggle<CR>",
+			{ noremap = true, silent = true, desc = "Toggle file explorer" }
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>nf",
+			":NvimTreeFocus<CR>",
+			{ noremap = true, silent = true, desc = "Focus on tree" }
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>nn",
+			":NvimTreeFindFile<CR>",
+			{ noremap = true, silent = true, desc = "Filter on file in tree" }
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>nc",
+			":NvimTreeCollapse<CR>",
+			{ noremap = true, silent = true, desc = "Close file tree" }
+		)
 	end,
 }
