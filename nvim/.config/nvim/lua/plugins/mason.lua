@@ -31,6 +31,9 @@ return {
 				"jdtls",
 				"kotlin_language_server",
 				"terraformls",
+				"helm-ls",
+				"dockerls",
+				"tflint",
 			},
 		})
 
@@ -42,7 +45,7 @@ return {
 				"black",
 				"pylint",
 				"eslint_d",
-				"tflint",
+				"ktlint",
 			},
 		})
 	end,
