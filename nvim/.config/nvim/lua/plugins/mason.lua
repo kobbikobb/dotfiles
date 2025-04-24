@@ -31,7 +31,7 @@ return {
 				"jdtls",
 				"kotlin_language_server",
 				"terraformls",
-				"helm-ls",
+				"helmls",
 				"dockerls",
 				"tflint",
 			},

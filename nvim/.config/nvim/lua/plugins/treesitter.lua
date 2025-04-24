@@ -3,7 +3,6 @@ return {
 	dependencies = {
 		"nvim-treesitter/nvim-treesitter-refactor",
 		"piersolenski/telescope-import.nvim",
-		"windwp/nvim-ts-autotag",
 	},
 	event = { "BufReadPre", "BufNewFile" },
 	build = ":TSUpdate",
@@ -21,14 +20,12 @@ return {
 				"kotlin",
 				"java",
 				"python",
+				"embedded_template",
 			},
 			sync_install = false,
 			auto_install = true,
 			indent = { enable = true },
 			highlight = {
-				enable = true,
-			},
-			autotag = {
 				enable = true,
 			},
 			incremental_selection = {
@@ -65,22 +62,5 @@ return {
 			},
 		})
 		require("telescope").load_extension("import")
-
-		require("nvim-ts-autotag").setup({
-			opts = {
-				-- Defaults
-				enable_close = true, -- Auto close tags
-				enable_rename = true, -- Auto rename pairs of tags
-				enable_close_on_slash = false, -- Auto close on trailing </
-			},
-			-- Also override individual filetype configs, these take priority.
-			-- Empty by default, useful if one of the "opts" global settings
-			-- doesn't work well in a specific filetype
-			per_filetype = {
-				["html"] = {
-					enable_close = false,
-				},
-			},
-		})
 	end,
 }
