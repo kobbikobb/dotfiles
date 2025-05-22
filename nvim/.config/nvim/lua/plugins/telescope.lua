@@ -13,7 +13,7 @@ return {
 
 		telescope.setup({
 			defaults = {
-				file_ignore_patterns = { "node_modules/", "dist/", "bin/" },
+				file_ignore_patterns = { "node_modules/", "dist/", "./bin/" },
 				path_display = { "smart" },
 				mappings = {
 					i = {

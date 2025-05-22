@@ -9,7 +9,7 @@ return {
 	config = function()
 		require("nvim-tree").setup({
 			filters = {
-				custom = { "node_modules", "bin", "dist", "__pycache__", ".idea", ".vscode" },
+				custom = { "node_modules", ".bin", "dist", "__pycache__", ".idea", ".vscode" },
 			},
 			view = {
 				width = 35,
