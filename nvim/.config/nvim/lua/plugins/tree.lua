@@ -11,6 +11,10 @@ return {
 			filters = {
 				custom = { "node_modules", ".bin", "dist", "__pycache__", ".idea", ".vscode" },
 			},
+			git = {
+				enable = true,
+				ignore = false,
+			},
 			view = {
 				width = 35,
 				relativenumber = true,
