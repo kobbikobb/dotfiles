@@ -34,6 +34,7 @@ return {
 				"helm_ls",
 				"dockerls",
 				"tflint",
+				"bashls",
 			},
 		})
 
