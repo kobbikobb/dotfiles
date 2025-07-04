@@ -15,6 +15,7 @@ return {
 			defaults = {
 				file_ignore_patterns = { "node_modules/", "dist/", "./bin/" },
 				path_display = { "smart" },
+				hidden = true,
 				mappings = {
 					i = {
 						["<C-k>"] = actions.move_selection_previous,
