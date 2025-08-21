@@ -29,12 +29,6 @@ return {
 			},
 		})
 
-		conform.formatters.biome = {
-			command = "npx",
-			args = { "biome", "format", "--stdin-file-path", "$FILENAME" },
-			stdin = true,
-		}
-
 		vim.keymap.set({ "n", "v" }, "<leader>mp", function()
 			conform.format({
 				lsp_fallback = true,
