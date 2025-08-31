@@ -44,6 +44,7 @@ return { -- Useful plugin to show you pending keybinds.
 
 		-- Document existing key chains
 		spec = {
+			{ "<leader>a", group = "[a]vante - Ask AI" },
 			{ "<leader>c", group = "[c]ode", mode = { "n", "x" } },
 			{ "<leader>d", group = "[d]ocument" },
 			{ "<leader>r", group = "[r]ename" },
@@ -55,7 +56,7 @@ return { -- Useful plugin to show you pending keybinds.
 			{ "<leader>t", group = "[t]est" },
 			{ "<leader>T", group = "[T]ab" },
 			{ "<leader>h", group = "Git [h]unk", mode = { "n", "v" } },
-			{ "<leader>a", group = "H[a]rpoon" },
+			{ "<leader>o", group = "Harp[o]on" },
 			{ "<leader>x", group = "[x] Trouble!" },
 		},
 	},
