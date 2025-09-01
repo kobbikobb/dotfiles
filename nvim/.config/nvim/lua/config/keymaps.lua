@@ -15,6 +15,10 @@ vim.keymap.set("i", "<C-h>", "<Left>", { desc = "Move left" })
 vim.keymap.set("i", "<C-j>", "<Down>", { desc = "Move down" })
 vim.keymap.set("i", "<C-k>", "<Up>", { desc = "Move up" })
 
+-- Quickfix - Ctrl-Q Add to quickfix list
+vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>", { desc = "Next Quick Fix" })
+vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>", { desc = "Prev Quck --[[ Fi ]]x" })
+
 -- Increment / Decrement Numbers
 vim.keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
 vim.keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" })
