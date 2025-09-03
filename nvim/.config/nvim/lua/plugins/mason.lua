@@ -49,5 +49,17 @@ return {
 				"ktlint",
 			},
 		})
+
+            -- Configure ktlint to automatically format Kotlin files on save
+            local function ktlint_autocmd()
+                vim.api.nvim_create_autocmd("BufWritePost", {
+                    pattern = "*.kt",
+                    callback = function()
+                        vim.fn.system("ktlint -F " .. vim.fn.expand("%"))
+                    end,
+                })
+            end
+
+            ktlint_autocmd()
 	end,
 }
