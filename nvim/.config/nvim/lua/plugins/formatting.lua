@@ -31,6 +31,9 @@ return {
 
 		conform.formatters.biome = {
 			command = "npx",
+						condition = function()
+							return vim.fn.executable("npx") == 1
+						end,
 			args = { "biome", "format", "--stdin-file-path", "$FILENAME" },
 			stdin = true,
 		}
