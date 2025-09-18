@@ -30,12 +30,18 @@ return {
 		})
 
 		conform.formatters.biome = {
-			command = "npx",
-						condition = function()
-							return vim.fn.executable("npx") == 1
-						end,
-			args = { "biome", "format", "--stdin-file-path", "$FILENAME" },
-			stdin = true,
+ 			command = "npx",
+ 			condition = function(ctx)
+ 				if vim.fn.executable("npx") ~= 1 then
+ 					return false
+ 				end
+ 				local root = ctx and ctx.root or vim.fn.getcwd()
+ 				local biome_config = root .. "/biome.json"
+ 				local biome_dot_config = root .. "/.biome.json"
+ 				return vim.fn.filereadable(biome_config) == 1 or vim.fn.filereadable(biome_dot_config) == 1
+ 			end,
+ 			args = { "biome", "format", "--stdin-file-path", "$FILENAME" },
+ 			stdin = true,
 		}
 
 		vim.keymap.set({ "n", "v" }, "<leader>mp", function()
