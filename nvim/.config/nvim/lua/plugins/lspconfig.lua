@@ -18,7 +18,7 @@ return {
 
 				opts.desc = "Show LSP references"
 				keymap.set("n", "gR", function()
-				  vim.lsp.buf.references(vim.lsp.util.make_position_params())
+					vim.lsp.buf.references(vim.lsp.util.make_position_params())
 				end, opts)
 
 				opts.desc = "Go to declaration"

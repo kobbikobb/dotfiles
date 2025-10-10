@@ -13,7 +13,7 @@ return {
 
 		telescope.setup({
 			defaults = {
-				file_ignore_patterns = { "node_modules/", "dist/", "./bin/" },
+				file_ignore_patterns = { "node_modules/", "dist/", "./bin/", ".git/" },
 				path_display = { "smart" },
 				hidden = true,
 				mappings = {
@@ -25,6 +25,13 @@ return {
 							require("telescope.actions").open_qflist(prompt_bufnr)
 						end,
 					},
+				},
+			},
+			pickers = {
+				live_grep = {
+					additional_args = function()
+						return { "--hidden" }
+					end,
 				},
 			},
 		})
