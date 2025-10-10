@@ -11,8 +11,8 @@ vim.opt.background = "dark"
 vim.opt.signcolumn = "yes"
 vim.opt.backupcopy = "yes"
 
-vim.wo.number = false
-vim.opt.relativenumber = true
+vim.wo.number = true
+vim.opt.relativenumber = false
 vim.opt.cursorline = true
 vim.opt.wrap = false
 
