@@ -13,7 +13,7 @@ vim.opt.backupcopy = "yes"
 
 vim.wo.number = true
 vim.opt.relativenumber = false
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 vim.opt.wrap = false
 
 -- search
