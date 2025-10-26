@@ -35,6 +35,7 @@ return {
 				"dockerls",
 				"tflint",
 				"bashls",
+				"rust_analyzer",
 			},
 		})
 
@@ -47,6 +48,7 @@ return {
 				"pylint",
 				"eslint_d",
 				"ktlint",
+				"rust_analyzer",
 			},
 		})
 
