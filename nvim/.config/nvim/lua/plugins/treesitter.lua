@@ -2,7 +2,7 @@ return {
 	"nvim-treesitter/nvim-treesitter",
 	dependencies = {
 		"nvim-treesitter/nvim-treesitter-refactor",
-		"piersolenski/telescope-import.nvim",
+		"piersolenski/import.nvim",
 	},
 	event = { "BufReadPre", "BufNewFile" },
 	build = ":TSUpdate",
