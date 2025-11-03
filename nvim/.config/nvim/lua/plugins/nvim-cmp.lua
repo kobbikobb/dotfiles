@@ -42,7 +42,7 @@ return {
 				{ name = "nvim_lsp" },
 				{ name = "luasnip" },
 				{ name = "buffer" },
-				{ name = "patn" },
+				{ name = "path" },
 			}),
 			formatting = {
 				format = lspkind.cmp_format({

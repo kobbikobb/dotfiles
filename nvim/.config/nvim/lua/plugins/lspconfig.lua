@@ -61,7 +61,11 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
+		local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+		-- Configure lua_ls with custom settings
 		vim.lsp.config("lua_ls", {
+			capabilities = capabilities,
 			settings = {
 				Lua = {
 					runtime = {
@@ -76,5 +80,31 @@ return {
 				},
 			},
 		})
+
+		-- Configure all other language servers with default settings
+		local servers = {
+			"ts_ls",
+			"html",
+			"cssls",
+			"tailwindcss",
+			"svelte",
+			"pyright",
+			"jdtls",
+			"kotlin_language_server",
+			"terraformls",
+			"helm_ls",
+			"dockerls",
+			"bashls",
+			"rust_analyzer",
+		}
+
+		for _, server in ipairs(servers) do
+			vim.lsp.config(server, {
+				capabilities = capabilities,
+			})
+		end
+
+		-- Enable all configured LSP servers
+		vim.lsp.enable({ "lua_ls", unpack(servers) })
 	end,
 }
