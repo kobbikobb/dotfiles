@@ -52,7 +52,8 @@ return {
 					callback = function()
 						local file = vim.fn.expand("%:p")
 						vim.fn.system("ktlint -F " .. vim.fn.shellescape(file))
-						vim.cmd("edit") -- Reload the buffer to show changes
+						-- Reload buffer only if it wasn't modified during formatting
+						vim.cmd("checktime")
 					end,
 				})
 
@@ -65,18 +66,8 @@ return {
 						vim.fn.system("isort " .. vim.fn.shellescape(file))
 						-- Then run black (code formatting)
 						vim.fn.system("black " .. vim.fn.shellescape(file))
-						vim.cmd("edit")
-					end,
-				})
-				vim.api.nvim_create_autocmd("BufWritePre", {
-					pattern = "*.py",
-					callback = function()
-						local file = vim.fn.expand("%:p")
-						-- Run isort first (import sorting)
-						vim.fn.system("isort " .. vim.fn.shellescape(file))
-						-- Then run black (code formatting)
-						vim.fn.system("black " .. vim.fn.shellescape(file))
-						vim.cmd("edit")
+						-- Reload buffer only if it wasn't modified during formatting
+						vim.cmd("checktime")
 					end,
 				})
 			end,
