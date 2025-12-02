@@ -8,6 +8,7 @@ return {
 		"nvim-neotest/neotest-jest",
 		"marilari88/neotest-vitest",
 		"kobbikobb/neotest-gradle",
+		"nvim-neotest/neotest-python",
 	},
 	config = function()
 		require("neotest").setup({
@@ -20,6 +21,27 @@ return {
 				}),
 				require("neotest-vitest"),
 				require("neotest-gradle"),
+				require("neotest-python")({
+					dap = { justMyCode = false },
+					runner = "pytest",
+					python = function()
+						-- Try to find python in virtual environment first
+						local venv_paths = {
+							".venv/bin/python",
+							"venv/bin/python",
+							".env/bin/python",
+							"env/bin/python",
+						}
+						for _, path in ipairs(venv_paths) do
+							local full_path = vim.fn.getcwd() .. "/" .. path
+							if vim.fn.executable(full_path) == 1 then
+								return full_path
+							end
+						end
+						-- Fall back to system python3
+						return vim.fn.exepath("python3") or vim.fn.exepath("python")
+					end,
+				}),
 			},
 		})
 
