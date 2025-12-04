@@ -44,8 +44,13 @@ return {
 					"eslint_d",
 					"ktlint",
 				},
+				auto_update = true,
+				run_on_start = true,
 			},
-			config = function()
+			config = function(_, opts)
+				local mason_tool_installer = require("mason-tool-installer")
+				mason_tool_installer.setup(opts)
+
 				-- Auto-format Kotlin files before save using ktlint
 				vim.api.nvim_create_autocmd("BufWritePre", {
 					pattern = "*.kt",
