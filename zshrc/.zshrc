@@ -1,4 +1,4 @@
-neofetch
+fastfetch
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -86,7 +86,7 @@ export ZSH="$HOME/.oh-my-zsh"
 
 # TODO: REMOVE plugins=(git docker npm python history)
 # plugins=(git zsh-syntax-highlighting docker npm python history zsh-autosuggestions )
-plugins=(git docker npm python history)
+plugins=(git docker npm python history zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -148,8 +148,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 export PATH="/usr/share/zsh/plugins:$PATH"
 
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-
 . "$HOME/.local/bin/env"
+# source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform

@@ -1,5 +1,6 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	branch = "master", -- Due to a bug switching to main
 	dependencies = {
 		"nvim-treesitter/nvim-treesitter-refactor",
 		"piersolenski/import.nvim",
