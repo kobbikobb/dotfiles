@@ -20,6 +20,7 @@ return {
 				"typescript",
 				"kotlin",
 				"java",
+				"groovy",
 				"python",
 				"embedded_template",
 			},

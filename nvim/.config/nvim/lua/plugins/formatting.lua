@@ -20,12 +20,13 @@ return {
 				liquid = { "prettier", "biome" },
 				lua = { "stylua" },
 				python = { "isort", "black" },
+				kotlin = { "ktlint" },
 				terraform = { "terraform_fmt" },
 			},
 			format_on_save = {
 				lsp_fallback = true,
 				async = false,
-				timeout_ms = 1000,
+				timeout_ms = 5000,
 			},
 		})
 
@@ -48,7 +49,7 @@ return {
 			conform.format({
 				lsp_fallback = true,
 				async = false,
-				timeout_ms = 1000,
+				timeout_ms = 5000,
 			})
 		end, { desc = "Format file or range (in visual mode)" })
 	end,

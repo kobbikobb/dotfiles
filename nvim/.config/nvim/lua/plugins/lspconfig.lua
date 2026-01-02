@@ -91,6 +91,8 @@ return {
 			"pyright",
 			"jdtls",
 			"kotlin_language_server",
+			"groovyls",
+			"gradle_ls",
 			"terraformls",
 			"helm_ls",
 			"dockerls",

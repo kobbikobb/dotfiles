@@ -13,7 +13,7 @@ return {
 			},
 			git = {
 				enable = true,
-				ignore = false,
+				ignore = true,
 			},
 			view = {
 				width = 35,
