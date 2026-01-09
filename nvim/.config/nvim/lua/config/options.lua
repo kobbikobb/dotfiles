@@ -26,3 +26,7 @@ vim.opt.clipboard:append("unnamedplus") -- system clipboard
 -- split windows
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+
+-- Performance
+vim.opt.updatetime = 300 -- Faster CursorHold events (default: 4000ms)
+vim.opt.redrawtime = 1500 -- Prevent hangs on complex syntax (default: 2000ms)

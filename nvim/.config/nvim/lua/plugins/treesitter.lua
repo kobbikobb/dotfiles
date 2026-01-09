@@ -44,7 +44,7 @@ return {
 					enable = true,
 					clear_on_cursor_move = true,
 				},
-				highlight_current_scope = { enable = true },
+				highlight_current_scope = { enable = false }, -- This one is expensive, keep off
 				smart_rename = {
 					enable = true,
 					keymaps = {

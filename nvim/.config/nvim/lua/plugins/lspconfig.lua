@@ -61,6 +61,20 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
+		-- Optimize diagnostic performance without losing information
+		vim.diagnostic.config({
+			update_in_insert = false, -- Don't update while typing (big performance win)
+			virtual_text = {
+				spacing = 4,
+				prefix = "●",
+			},
+			float = {
+				border = "rounded",
+				source = "always",
+			},
+			severity_sort = true,
+		})
+
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 		-- Configure lua_ls with custom settings
@@ -81,6 +95,14 @@ return {
 			},
 		})
 
+		-- Configure Kotlin language server with debouncing for better performance
+		vim.lsp.config("kotlin_language_server", {
+			capabilities = capabilities,
+			flags = {
+				debounce_text_changes = 300, -- Debounce to reduce LSP load
+			},
+		})
+
 		-- Configure all other language servers with default settings
 		local servers = {
 			"ts_ls",
@@ -90,7 +112,6 @@ return {
 			"svelte",
 			"pyright",
 			"jdtls",
-			"kotlin_language_server",
 			"groovyls",
 			"gradle_ls",
 			"terraformls",
@@ -107,6 +128,6 @@ return {
 		end
 
 		-- Enable all configured LSP servers
-		vim.lsp.enable({ "lua_ls", unpack(servers) })
+		vim.lsp.enable({ "lua_ls", "kotlin_language_server", unpack(servers) })
 	end,
 }
