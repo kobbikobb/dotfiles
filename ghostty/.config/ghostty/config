@@ -1,0 +1,10 @@
+# Ghostty Configuration
+
+# Font settings
+font-size = 16
+
+# Keybindings
+keybind = shift+enter=text:\x1b\r
+
+# Keep the same working directory when opening new tabs
+window-inherit-working-directory = true

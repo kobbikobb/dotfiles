@@ -8,3 +8,4 @@
     - stow -t ~ nvim
     - stow -t ~ tmux
     - stow -t ~ zshrc
+    - stow -t ~ ghostty
