@@ -73,6 +73,13 @@ return {
 				source = "always",
 			},
 			severity_sort = true,
+			-- Show unnecessary/unused code diagnostics
+			signs = {
+				severity = { min = vim.diagnostic.severity.HINT },
+			},
+			underline = {
+				severity = { min = vim.diagnostic.severity.HINT },
+			},
 		})
 
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -95,11 +102,49 @@ return {
 			},
 		})
 
-		-- Configure Kotlin language server with debouncing for better performance
+		-- Configure Kotlin language server with enhanced settings
 		vim.lsp.config("kotlin_language_server", {
 			capabilities = capabilities,
 			flags = {
 				debounce_text_changes = 300, -- Debounce to reduce LSP load
+			},
+			settings = {
+				kotlin = {
+					compiler = {
+						jvm = {
+							target = "17", -- Adjust to your project's JVM target
+						},
+					},
+					languageServer = {
+						enabled = true,
+					},
+					linting = {
+						debounceTime = 250, -- Time between lints in ms
+					},
+					completion = {
+						snippets = {
+							enabled = true,
+						},
+					},
+					diagnostics = {
+						enabled = true,
+					},
+					externalSources = {
+						useKlsScheme = true, -- Better support for external sources
+						autoConvertToKotlin = true, -- Auto-convert Java to Kotlin when viewing
+					},
+					inlayHints = {
+						typeHints = {
+							enabled = true,
+						},
+						parameterHints = {
+							enabled = true,
+						},
+						chainedHints = {
+							enabled = true,
+						},
+					},
+				},
 			},
 		})
 

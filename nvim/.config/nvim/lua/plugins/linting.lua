@@ -16,13 +16,18 @@ return {
 
 		local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 
+		-- Auto-lint on save and InsertLeave (excluding Kotlin - too slow)
 		vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
 			group = lint_augroup,
 			callback = function()
-				lint.try_lint()
+				-- Skip auto-linting for Kotlin files (too slow)
+				if vim.bo.filetype ~= "kotlin" then
+					lint.try_lint()
+				end
 			end,
 		})
 
+		-- Manual linting with ktlint
 		vim.keymap.set("n", "<leader>l", function()
 			lint.try_lint()
 		end, { desc = "Trigger linting for current file" })

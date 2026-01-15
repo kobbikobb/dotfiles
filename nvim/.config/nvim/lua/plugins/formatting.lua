@@ -23,12 +23,25 @@ return {
 				kotlin = { "ktlint" },
 				terraform = { "terraform_fmt" },
 			},
-			format_on_save = {
-				lsp_fallback = true,
-				async = false,
-				timeout_ms = 5000,
-			},
+			format_on_save = function(bufnr)
+				-- Disable format-on-save for Kotlin (ktlint is slow)
+				if vim.bo[bufnr].filetype == "kotlin" then
+					return
+				end
+				return {
+					lsp_fallback = true,
+					async = false,
+					timeout_ms = 5000,
+				}
+			end,
 		})
+
+		-- Custom ktlint formatter with longer timeout
+		conform.formatters.ktlint = {
+			command = "ktlint",
+			args = { "--format", "--stdin" },
+			stdin = true,
+		}
 
 		conform.formatters.biome = {
  			command = "npx",
@@ -46,10 +59,12 @@ return {
 		}
 
 		vim.keymap.set({ "n", "v" }, "<leader>mp", function()
+			-- Use longer timeout for Kotlin files
+			local timeout = vim.bo.filetype == "kotlin" and 30000 or 5000
 			conform.format({
 				lsp_fallback = true,
 				async = false,
-				timeout_ms = 5000,
+				timeout_ms = timeout,
 			})
 		end, { desc = "Format file or range (in visual mode)" })
 	end,
