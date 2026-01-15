@@ -1,4 +1,4 @@
--- Auto open last accessed file when starting nvim with a directory
+-- Auto open README file when starting nvim with a directory
 vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
 		-- Defer to let nvim-tree and other plugins load first
@@ -24,37 +24,13 @@ vim.api.nvim_create_autocmd("VimEnter", {
 				local cwd = vim.fn.getcwd()
 				local file_to_open = nil
 
-				-- Try to find the most recently opened file in this directory
-				local oldfiles = vim.v.oldfiles or {}
-				for _, oldfile in ipairs(oldfiles) do
-					-- Check if the old file is in the current directory and still exists
-					if oldfile:find(cwd, 1, true) == 1 and vim.fn.filereadable(oldfile) == 1 then
-						file_to_open = oldfile
+				-- Try to open README.md (case insensitive)
+				local readme_variants = { "README.md", "readme.md", "Readme.md", "README.MD" }
+				for _, readme in ipairs(readme_variants) do
+					local readme_path = cwd .. "/" .. readme
+					if vim.fn.filereadable(readme_path) == 1 then
+						file_to_open = readme_path
 						break
-					end
-				end
-
-				-- If no recent file found, fall back to README or first file
-				if not file_to_open then
-					-- Try to open README.md (case insensitive)
-					local readme_variants = { "README.md", "readme.md", "Readme.md", "README.MD" }
-					for _, readme in ipairs(readme_variants) do
-						local readme_path = cwd .. "/" .. readme
-						if vim.fn.filereadable(readme_path) == 1 then
-							file_to_open = readme_path
-							break
-						end
-					end
-				end
-
-				-- If still no file, open the first file in the directory
-				if not file_to_open then
-					local files = vim.fn.globpath(cwd, "*", false, true)
-					for _, file in ipairs(files) do
-						if vim.fn.isdirectory(file) == 0 and vim.fn.filereadable(file) == 1 then
-							file_to_open = file
-							break
-						end
 					end
 				end
 
