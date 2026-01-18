@@ -92,6 +92,16 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+export LANG="is_IS.utf8"
+export LC_ALL="is_IS.utf8"
+export LC_CTYPE="is_IS.utf8"
+export LC_NUMERIC="is_IS.utf8"
+export LC_COLLATE="is_IS.utf8"
+export LC_TIME="is_IS.utf8"
+export LC_MESSAGES="is_IS.utf8"
+export LC_MONETARY="is_IS.utf8"
+export LC_MEASUREMENT="is_IS.utf8"
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
@@ -135,6 +145,10 @@ alias ls=eza --icons
 alias n=nvim
 alias diff=lazygit
 alias cat=bat
+
+# Enable vi keybindings in zsh
+bindkey -v
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
@@ -153,3 +167,7 @@ export PATH="/usr/share/zsh/plugins:$PATH"
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

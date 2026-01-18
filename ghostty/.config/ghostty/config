@@ -1,7 +1,8 @@
 # Ghostty Configuration
 
 # Font settings
-font-size = 16
+font-family = JetBrainsMono Nerd Font
+font-size = 15
 
 # Keybindings
 keybind = shift+enter=text:\x1b\r
