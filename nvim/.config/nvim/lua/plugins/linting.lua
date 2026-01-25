@@ -10,7 +10,7 @@ return {
 			javascriptreact = { "eslint_d" },
 			typescriptreact = { "eslint_d" },
 			svelte = { "eslint_d" },
-			python = { "pylint" },
+			-- Python linting now handled by ruff LSP
 			kotlin = { "ktlint" },
 		}
 

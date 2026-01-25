@@ -148,6 +148,37 @@ return {
 			},
 		})
 
+		-- Configure basedpyright with custom settings for Python
+		vim.lsp.config("basedpyright", {
+			capabilities = capabilities,
+			root_dir = function(fname)
+				-- Find the project root by looking for pyproject.toml or .git
+				local util = require("lspconfig.util")
+				return util.root_pattern("pyproject.toml", ".git")(fname)
+			end,
+			settings = {
+				basedpyright = {
+					analysis = {
+						typeCheckingMode = "standard", -- "off", "basic", "standard", "strict"
+						autoSearchPaths = true,
+						useLibraryCodeForTypes = true,
+						diagnosticMode = "openFilesOnly",
+						-- Disable import organizing (let ruff handle it)
+						disableOrganizeImports = true,
+					},
+				},
+			},
+		})
+
+		-- Configure Ruff LSP for linting and formatting
+		vim.lsp.config("ruff", {
+			capabilities = capabilities,
+			on_attach = function(client, bufnr)
+				-- Disable hover in favor of basedpyright
+				client.server_capabilities.hoverProvider = false
+			end,
+		})
+
 		-- Configure all other language servers with default settings
 		local servers = {
 			"ts_ls",
@@ -155,7 +186,6 @@ return {
 			"cssls",
 			"tailwindcss",
 			"svelte",
-			"pyright",
 			"jdtls",
 			"groovyls",
 			"gradle_ls",
@@ -173,6 +203,6 @@ return {
 		end
 
 		-- Enable all configured LSP servers
-		vim.lsp.enable({ "lua_ls", "kotlin_language_server", unpack(servers) })
+		vim.lsp.enable({ "lua_ls", "kotlin_language_server", "basedpyright", "ruff", unpack(servers) })
 	end,
 }

@@ -19,7 +19,7 @@ return {
 				graphql = { "prettier", "biome" },
 				liquid = { "prettier", "biome" },
 				lua = { "stylua" },
-				python = { "isort", "black" },
+				-- Python formatting handled by ruff LSP (via lsp_fallback)
 				kotlin = { "ktlint" },
 				terraform = { "terraform_fmt" },
 			},
