@@ -58,7 +58,7 @@ return {
 		local signs = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+			vim.fn.sign_define(hl, { text = icon, texthl = hl })
 		end
 
 		-- Optimize diagnostic performance without losing information
@@ -156,6 +156,22 @@ return {
 				local util = require("lspconfig.util")
 				return util.root_pattern("pyproject.toml", ".git")(fname)
 			end,
+			before_init = function(_, config)
+				-- Auto-detect uv virtual environment
+				local util = require("lspconfig.util")
+				local root = util.root_pattern("pyproject.toml", ".git")(config.root_dir or vim.fn.getcwd())
+				if root then
+					local uv_venv = root .. "/.venv"
+					local uv_python = uv_venv .. "/bin/python"
+					if vim.fn.executable(uv_python) == 1 then
+						config.settings.python = vim.tbl_deep_extend("force", config.settings.python or {}, {
+							pythonPath = uv_python,
+							venvPath = root,
+							venv = ".venv",
+						})
+					end
+				end
+			end,
 			settings = {
 				basedpyright = {
 					analysis = {
@@ -165,6 +181,12 @@ return {
 						diagnosticMode = "openFilesOnly",
 						-- Disable import organizing (let ruff handle it)
 						disableOrganizeImports = true,
+					},
+				},
+				python = {
+					analysis = {
+						autoSearchPaths = true,
+						useLibraryCodeForTypes = true,
 					},
 				},
 			},
