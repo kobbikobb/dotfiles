@@ -43,6 +43,7 @@ return {
 					"stylua",
 					"eslint_d",
 					"ktlint",
+					"debugpy",
 				},
 				auto_update = true,
 				run_on_start = true,
