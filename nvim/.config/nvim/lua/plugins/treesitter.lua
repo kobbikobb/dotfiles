@@ -1,9 +1,11 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
-	build = ":TSUpdate",
+    branch = "master",
 	dependencies = {
 		"piersolenski/import.nvim",
-	},
+
+        "nvim-lua/plenary.nvim" ,
+    },
 	config = function()
 		-- Safely require nvim-treesitter
 		local status_ok, treesitter = pcall(require, "nvim-treesitter.configs")
