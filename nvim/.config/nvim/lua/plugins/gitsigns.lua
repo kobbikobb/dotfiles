@@ -2,6 +2,11 @@ return {
 	"lewis6991/gitsigns.nvim",
 	event = { "BufReadPre", "BufNewFile" },
 	opts = {
+		signcolumn = true,
+		numhl = true, -- Highlight the line number
+		linehl = false, -- Set to true if you want the whole line background to change
+		word_diff = true, -- Highlights specific character changes within a line
+
 		on_attach = function(bufnr)
 			local gs = package.loaded.gitsigns
 
