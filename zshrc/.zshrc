@@ -149,6 +149,9 @@ alias gcm='git switch main && git pull --rebase origin main'
 alias grm='git fetch origin && git rebase origin/main'
 alias gpf='git push --force-with-lease'
 alias gs='git status'
+alias ga='git add -p'
+alias gc='git commit'
+alias gp='git push'
 
 # Enable vi keybindings in zsh
 bindkey -v
