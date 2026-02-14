@@ -145,6 +145,10 @@ alias ls=eza --icons
 alias n=nvim
 alias diff=lazygit
 alias cat=bat
+alias gcm='git switch main && git pull --rebase origin main'
+alias grm='git fetch origin && git rebase origin/main'
+alias gpf='git push --force-with-lease'
+alias gs='git status'
 
 # Enable vi keybindings in zsh
 bindkey -v
