@@ -195,10 +195,20 @@ return {
 		-- Configure Ruff LSP for linting and formatting
 		vim.lsp.config("ruff", {
 			capabilities = capabilities,
+			root_dir = function(fname)
+				local util = require("lspconfig.util")
+				return util.root_pattern("pyproject.toml", "ruff.toml", ".ruff.toml", ".git")(fname)
+			end,
 			on_attach = function(client, bufnr)
-				-- Disable hover in favor of basedpyright
 				client.server_capabilities.hoverProvider = false
 			end,
+			settings = {
+				ruff = {
+					lint = {
+						enable = true,
+					},
+				},
+			},
 		})
 
 		-- Configure all other language servers with default settings

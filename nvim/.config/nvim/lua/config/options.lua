@@ -10,6 +10,8 @@ vim.opt.termguicolors = true
 vim.opt.background = "dark"
 vim.opt.signcolumn = "yes"
 vim.opt.backupcopy = "yes"
+vim.opt.backup = false
+vim.opt.swapfile = false
 
 vim.wo.number = true
 vim.opt.relativenumber = false
