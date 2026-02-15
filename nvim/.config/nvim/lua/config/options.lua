@@ -12,6 +12,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.backupcopy = "yes"
 vim.opt.backup = false
 vim.opt.swapfile = false
+vim.opt.writeany = true
 
 vim.wo.number = true
 vim.opt.relativenumber = false
