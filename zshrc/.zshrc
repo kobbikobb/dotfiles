@@ -177,3 +177,6 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # opencode
 export PATH=/home/admin/.opencode/bin:$PATH
+
+# opencode
+export PATH=/Users/jakobjonasson/.opencode/bin:$PATH
