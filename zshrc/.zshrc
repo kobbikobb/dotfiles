@@ -7,7 +7,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -149,6 +149,15 @@ alias gs='git status'
 alias ga='git add -p'
 alias gc='git commit'
 alias gp='git push'
+alias k='kubectl'
+
+git_worktree_clean() {
+  git worktree prune
+  git worktree list --porcelain | sed -n 's/^worktree //p' | tail -n +2 | while read -r wt; do
+    git worktree remove --force "$wt" 2>/dev/null
+  done
+  git worktree prune
+}
 
 # Enable vi keybindings in zsh
 bindkey -v
@@ -177,13 +186,21 @@ export NVM_DIR="$HOME/.nvm"
 
 # opencode
 export PATH=/home/admin/.opencode/bin:$PATH
-
-# opencode
 export PATH=/Users/jakobjonasson/.opencode/bin:$PATH
 
-export JAVA_HOME="$(brew --prefix openjdk)"
+# Libs
+export JAVA_HOME=$(/usr/libexec/java_home)
 export PATH="$JAVA_HOME/bin:$PATH"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+if test -d "$HOME/.pyenv"; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+fi
+export PATH="$HOME/bin:$PATH"
+
+# Load extra environment variables
+[[ -f "$HOME/zshrc.env" ]] && source "$HOME/zshrc.env"

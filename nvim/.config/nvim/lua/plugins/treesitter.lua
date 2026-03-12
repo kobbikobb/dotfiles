@@ -1,52 +1,47 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
 	branch = "main",
+	build = ":TSUpdate",
 	dependencies = {
 		"piersolenski/import.nvim",
-
-        "nvim-lua/plenary.nvim" ,
-    },
+		"nvim-lua/plenary.nvim",
+	},
 	config = function()
-		-- Safely require nvim-treesitter
-		local status_ok, treesitter = pcall(require, "nvim-treesitter.configs")
-		if not status_ok then
-			vim.notify("nvim-treesitter.configs not available yet", vim.log.levels.WARN)
-			return
+		require("nvim-treesitter").setup({})
+
+		-- Install parsers
+		local ensure_installed = {
+			"lua",
+			"vim",
+			"vimdoc",
+			"markdown",
+			"markdown_inline",
+			"html",
+			"javascript",
+			"typescript",
+			"kotlin",
+			"java",
+			"groovy",
+			"python",
+			"bash",
+		}
+
+		local installed = require("nvim-treesitter").get_installed()
+		local to_install = vim.tbl_filter(function(lang)
+			return not vim.tbl_contains(installed, lang)
+		end, ensure_installed)
+
+		if #to_install > 0 then
+			require("nvim-treesitter").install(to_install)
 		end
 
-		treesitter.setup({
-			ensure_installed = {
-				"lua",
-				"vim",
-				"vimdoc",
-				"markdown",
-				"markdown_inline",
-				"html",
-				"javascript",
-				"typescript",
-				"kotlin",
-				"java",
-				"groovy",
-				"python",
-				"bash",
-			},
-			sync_install = false,
-			auto_install = true,
-			indent = { enable = true },
-			highlight = {
-				enable = true,
-			},
-			incremental_selection = {
-				enable = true,
-				keymaps = {
-					init_selection = "<C-space>",
-					node_incremental = "<C-space>",
-					scope_incremental = false,
-					node_decremental = "<bs>",
-				},
-			},
+		-- Enable treesitter-based highlighting for all filetypes
+		vim.api.nvim_create_autocmd("FileType", {
+			callback = function(args)
+				pcall(vim.treesitter.start, args.buf)
+			end,
 		})
-		
+
 		-- Safely load telescope extension
 		local telescope_status, telescope = pcall(require, "telescope")
 		if telescope_status then
