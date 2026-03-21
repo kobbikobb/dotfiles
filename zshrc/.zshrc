@@ -1,4 +1,11 @@
 fastfetch
+
+# Detect OS
+case "$(uname -s)" in
+  Darwin*) OS="macos" ;;
+  Linux*) OS="linux" ;;
+  *) OS="unknown" ;;
+esac
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -18,7 +25,11 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 
 # TODO: Check not needed?
-ZSH_THEME="powerlevel10k/powerlevel10k"
+if [[ -f "$HOME/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+  ZSH_THEME="powerlevel10k/powerlevel10k"
+else
+  ZSH_THEME="robbyrussell"
+fi
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -126,11 +137,9 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/jakobjonasson/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
-eval $(thefuck --alias)
+
+
 
 
 # Ruby
@@ -166,7 +175,9 @@ bindkey -v
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # bun completions
-[ -s "/Users/jakobjonasson/.bun/_bun" ] && source "/Users/jakobjonasson/.bun/_bun"
+if [[ "$OS" == "macos" ]]; then
+  [ -s "/Users/jakobjonasson/.bun/_bun" ] && source "/Users/jakobjonasson/.bun/_bun"
+fi
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -186,11 +197,17 @@ export NVM_DIR="$HOME/.nvm"
 
 # opencode
 export PATH=/home/admin/.opencode/bin:$PATH
-export PATH=/Users/jakobjonasson/.opencode/bin:$PATH
+if [[ "$OS" == "macos" ]]; then
+  export PATH=/Users/jakobjonasson/.opencode/bin:$PATH
+fi
 
 # Libs
-export JAVA_HOME=$(/usr/libexec/java_home)
-export PATH="$JAVA_HOME/bin:$PATH"
+if [[ "$OS" == "macos" ]]; then
+  export JAVA_HOME=$(/usr/libexec/java_home)
+elif [[ -d "/usr/lib/jvm" ]]; then
+  export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+fi
+[[ -n "$JAVA_HOME" ]] && export PATH="$JAVA_HOME/bin:$PATH"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
