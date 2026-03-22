@@ -211,6 +211,36 @@ return {
 			},
 		})
 
+		-- Configure YAML LSP with schema support
+		vim.lsp.config("yamlls", {
+			capabilities = capabilities,
+			settings = {
+				yaml = {
+					validate = true,
+					format = true,
+					schemaStore = {
+						enable = true,
+						url = "https://www.schemastore.org/api/json/catalog/1.0.0",
+					},
+					schemas = {
+						["kubernetes"] = {
+							"kustomization.yaml",
+							"*.k8s.yaml",
+							"*.k8s.yml",
+						},
+						["docker-compose"] = {
+							"docker-compose.yaml",
+							"docker-compose.yml",
+						},
+						["ansible"] = {
+							"ansible.yaml",
+							"ansible.yml",
+						},
+					},
+				},
+			},
+		})
+
 		-- Configure all other language servers with default settings
 		local servers = {
 			"ts_ls",
@@ -235,6 +265,6 @@ return {
 		end
 
 		-- Enable all configured LSP servers
-		vim.lsp.enable({ "lua_ls", "kotlin_language_server", "basedpyright", "ruff", unpack(servers) })
+		vim.lsp.enable({ "lua_ls", "kotlin_language_server", "basedpyright", "ruff", "yamlls", unpack(servers) })
 	end,
 }

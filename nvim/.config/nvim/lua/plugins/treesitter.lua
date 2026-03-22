@@ -24,6 +24,10 @@ return {
 			"groovy",
 			"python",
 			"bash",
+			"yaml",
+			"yamlc",
+			"dockerfile",
+			"toml",
 		}
 
 		local installed = require("nvim-treesitter").get_installed()

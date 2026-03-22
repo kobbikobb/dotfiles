@@ -22,6 +22,7 @@ return {
 				python = { "ruff_format", "black" },
 				kotlin = { "ktlint" },
 				terraform = { "terraform_fmt" },
+				yaml = { "yamlfmt" },
 			},
 		})
 
