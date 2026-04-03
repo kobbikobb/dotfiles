@@ -7,8 +7,6 @@ return {
 		"nvim-lua/plenary.nvim",
 	},
 	config = function()
-		require("nvim-treesitter").setup({})
-
 		-- Install parsers
 		local ensure_installed = {
 			"lua",
@@ -25,9 +23,14 @@ return {
 			"python",
 			"bash",
 			"yaml",
-			"yamlc",
 			"dockerfile",
 			"toml",
+			"c_sharp",
+			"tsx",
+			"json",
+			"graphql",
+			"css",
+			"sql",
 		}
 
 		local installed = require("nvim-treesitter").get_installed()

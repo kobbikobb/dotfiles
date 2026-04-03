@@ -209,6 +209,21 @@ elif [[ -d "/usr/lib/jvm" ]]; then
 fi
 [[ -n "$JAVA_HOME" ]] && export PATH="$JAVA_HOME/bin:$PATH"
 
+
+# Load extra environment variables
+[[ -f "$HOME/zshrc.env" ]] && source "$HOME/zshrc.env"
+export DS_BASE_PATH=/Users/jakobjonasson/work/platform/devops-scripts
+
+export PATH=$PATH:$DS_BASE_PATH/bin
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+alias k=kubectl
+alias kc=kubectx
+alias kn=kubens
+alias yolo="claude --dangerously-skip-permissions"
+
+eval "$(ds --show-completions-zsh)"
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -218,6 +233,3 @@ if test -d "$HOME/.pyenv"; then
   eval "$(pyenv init -)"
 fi
 export PATH="$HOME/bin:$PATH"
-
-# Load extra environment variables
-[[ -f "$HOME/zshrc.env" ]] && source "$HOME/zshrc.env"
