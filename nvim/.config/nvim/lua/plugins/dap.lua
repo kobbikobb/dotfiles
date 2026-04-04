@@ -9,12 +9,13 @@ return {
 			"mfussenegger/nvim-dap",
 		},
 		config = function()
-			local dap = require("dap")
 			local dap_python = require("dap-python")
-
-            dap_python.setup("uv")
+			local python_path = require("utils").get_python_path()
+			dap_python.setup(python_path)
 			dap_python.test_runner = "pytest"
-
+			dap_python.resolve_python = function()
+				return require("utils").get_python_path()
+			end
 		end,
 	},
 	{
@@ -30,6 +31,9 @@ return {
 		dependencies = {
 			"mfussenegger/nvim-dap",
 			"mason-org/mason.nvim",
+		},
+		opts = {
+			ensure_installed = { "python" },
 		},
 	},
 	{

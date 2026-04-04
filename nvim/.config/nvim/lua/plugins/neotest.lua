@@ -9,40 +9,35 @@ return {
 		"marilari88/neotest-vitest",
 		"kobbikobb/neotest-gradle",
 		"nvim-neotest/neotest-python",
+		"mfussenegger/nvim-dap-python",
 	},
 	config = function()
-		require("neotest").setup({
-			adapters = {
-				require("neotest-jest")({
-					jestCommand = "npm test --",
-					cwd = function(path)
-						return vim.fn.getcwd()
-					end,
-				}),
-				require("neotest-vitest"),
-				require("neotest-gradle"),
-				require("neotest-python")({
-					dap = { justMyCode = false },
-					runner = "pytest",
-					python = function()
-						-- Try to find python in virtual environment first
-						local venv_paths = {
-							".venv/bin/python",
-							"venv/bin/python",
-							".env/bin/python",
-							"env/bin/python",
-						}
-						for _, path in ipairs(venv_paths) do
-							local full_path = vim.fn.getcwd() .. "/" .. path
-							if vim.fn.executable(full_path) == 1 then
-								return full_path
-							end
-						end
-						-- Fall back to system python3
-						return vim.fn.exepath("python3") or vim.fn.exepath("python")
-					end,
-				}),
+		local adapters = {}
+
+		-- Only load JS adapters when package.json exists
+		if vim.fn.filereadable(vim.fn.getcwd() .. "/package.json") == 1 then
+			table.insert(adapters, require("neotest-jest")({
+				jestCommand = "npm test --",
+				cwd = function(path)
+					return vim.fn.getcwd()
+				end,
+			}))
+			table.insert(adapters, require("neotest-vitest"))
+		end
+
+		table.insert(adapters, require("neotest-gradle"))
+		table.insert(adapters, require("neotest-python")({
+			dap = {
+				justMyCode = true,
 			},
+			runner = "pytest",
+			python = function()
+				return require("utils").get_python_path()
+			end,
+		}))
+
+		require("neotest").setup({
+			adapters = adapters,
 		})
 
 		-- Noetest map
