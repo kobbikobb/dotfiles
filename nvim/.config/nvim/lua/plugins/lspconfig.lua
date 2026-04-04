@@ -16,9 +16,7 @@ return {
 				-- TODO: Why is this not showing up in WhichKey?
 
 				opts.desc = "Show LSP references"
-				keymap.set("n", "gR", function()
-					vim.lsp.buf.references(vim.lsp.util.make_position_params())
-				end, opts)
+				keymap.set("n", "gR", vim.lsp.buf.references, opts)
 
 				opts.desc = "Go to declaration"
 				keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
@@ -151,26 +149,18 @@ return {
 		-- Configure basedpyright with custom settings for Python
 		vim.lsp.config("basedpyright", {
 			capabilities = capabilities,
-			root_dir = function(fname)
-				-- Find the project root by looking for pyproject.toml or .git
-				local util = require("lspconfig.util")
-				return util.root_pattern("pyproject.toml", ".git")(fname)
-			end,
+			root_markers = {
+				"pyproject.toml",
+				"setup.cfg",
+				"setup.py",
+				"requirements.txt",
+				".git",
+			},
 			before_init = function(_, config)
-				-- Auto-detect uv virtual environment
-				local util = require("lspconfig.util")
-				local root = util.root_pattern("pyproject.toml", ".git")(config.root_dir or vim.fn.getcwd())
-				if root then
-					local uv_venv = root .. "/.venv"
-					local uv_python = uv_venv .. "/bin/python"
-					if vim.fn.executable(uv_python) == 1 then
-						config.settings.python = vim.tbl_deep_extend("force", config.settings.python or {}, {
-							pythonPath = uv_python,
-							venvPath = root,
-							venv = ".venv",
-						})
-					end
-				end
+				local python_path = require("utils").get_python_path()
+				config.settings.python = vim.tbl_deep_extend("force", config.settings.python or {}, {
+					pythonPath = python_path,
+				})
 			end,
 			settings = {
 				basedpyright = {
@@ -195,10 +185,7 @@ return {
 		-- Configure Ruff LSP for linting and formatting
 		vim.lsp.config("ruff", {
 			capabilities = capabilities,
-			root_dir = function(fname)
-				local util = require("lspconfig.util")
-				return util.root_pattern("pyproject.toml", "ruff.toml", ".ruff.toml", ".git")(fname)
-			end,
+			root_markers = { "pyproject.toml", "ruff.toml", ".ruff.toml", "requirements.txt", ".git" },
 			on_attach = function(client, bufnr)
 				client.server_capabilities.hoverProvider = false
 			end,

@@ -14,7 +14,6 @@ return {
 				css = { "prettier", "biome" },
 				html = { "prettier", "biome" },
 				json = { "prettier", "biome" },
-				yaml = { "prettier", "biome" },
 				markdown = { "prettier", "biome" },
 				graphql = { "prettier", "biome" },
 				liquid = { "prettier", "biome" },

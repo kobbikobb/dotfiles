@@ -1,14 +1,9 @@
 -- Common maps
 
 -- Map <Leader><Tab> to switch to the last opened file
-vim.api.nvim_set_keymap(
-	"n",
-	"<Leader><Tab>",
-	":b#<CR>",
-	{ noremap = true, silent = true, desc = "Switch to last opened file" }
-)
+vim.keymap.set("n", "<Leader><Tab>", ":b#<CR>", { desc = "Switch to last opened file" })
 vim.keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
-vim.keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear searchn highlights" })
+vim.keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
 
 vim.keymap.set("i", "<C-l>", "<Right>", { desc = "Move right" })
 vim.keymap.set("i", "<C-h>", "<Left>", { desc = "Move left" })
@@ -17,7 +12,7 @@ vim.keymap.set("i", "<C-k>", "<Up>", { desc = "Move up" })
 
 -- Quickfix - Ctrl-Q Add to quickfix list
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>", { desc = "Next Quick Fix" })
-vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>", { desc = "Prev Quck --[[ Fi ]]x" })
+vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>", { desc = "Prev Quick Fix" })
 
 -- Increment / Decrement Numbers
 vim.keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
@@ -31,7 +26,7 @@ vim.keymap.set("n", "<leader>sc", "<cmd>close<CR>", { desc = "Close current spli
 
 vim.keymap.set("n", "<leader>Tn", "<cmd>tabnew<CR>", { desc = "Open new tab" })
 vim.keymap.set("n", "<leader>Tc", "<cmd>tabclose<CR>", { desc = "Close current tab" })
-vim.keymap.set("n", "<leader>Tn", "<cmd>tabn<CR>", { desc = "Go to next tab" })
+vim.keymap.set("n", "<leader>TN", "<cmd>tabn<CR>", { desc = "Go to next tab" })
 vim.keymap.set("n", "<leader>Tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
 vim.keymap.set("n", "<leader>Tb", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
 
