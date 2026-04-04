@@ -33,3 +33,8 @@ vim.opt.splitbelow = true
 -- Performance
 vim.opt.updatetime = 300 -- Faster CursorHold events (default: 4000ms)
 vim.opt.redrawtime = 1500 -- Prevent hangs on complex syntax (default: 2000ms)
+-- Disable unused remote plugin providers (no plugins need them, and
+-- the Python provider adds ~2.6s startup due to pyenv shim resolution)
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
