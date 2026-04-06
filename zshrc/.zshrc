@@ -219,6 +219,13 @@ alias kc=kubectx
 alias kn=kubens
 alias yolo="claude --dangerously-skip-permissions"
 
+colima-fix() {
+  colima stop --force
+  colima delete --force
+  limactl disk unlock colima 2>/dev/null
+  colima start --memory 16
+}
+
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
