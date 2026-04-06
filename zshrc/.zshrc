@@ -212,9 +212,6 @@ fi
 
 # Load extra environment variables
 [[ -f "$HOME/zshrc.env" ]] && source "$HOME/zshrc.env"
-export DS_BASE_PATH=/Users/jakobjonasson/work/platform/devops-scripts
-
-export PATH=$PATH:$DS_BASE_PATH/bin
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 alias k=kubectl
@@ -222,7 +219,6 @@ alias kc=kubectx
 alias kn=kubens
 alias yolo="claude --dangerously-skip-permissions"
 
-eval "$(ds --show-completions-zsh)"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
