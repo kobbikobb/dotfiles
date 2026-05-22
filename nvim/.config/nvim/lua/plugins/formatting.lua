@@ -18,7 +18,23 @@ return {
 				graphql = { "prettier", "biome" },
 				liquid = { "prettier", "biome" },
 				lua = { "stylua" },
-				python = { "ruff_format", "black" },
+				python = function(bufnr)
+					local root = vim.fs.root(bufnr, { "pyproject.toml", "ruff.toml", ".ruff.toml" })
+					if root then
+						if vim.uv.fs_stat(root .. "/ruff.toml") or vim.uv.fs_stat(root .. "/.ruff.toml") then
+							return { "ruff_format", "ruff_organize_imports" }
+						end
+						local pp = root .. "/pyproject.toml"
+						if vim.uv.fs_stat(pp) then
+							for _, line in ipairs(vim.fn.readfile(pp)) do
+								if line:match("^%[tool%.ruff") then
+									return { "ruff_format", "ruff_organize_imports" }
+								end
+							end
+						end
+					end
+					return { "isort", "black" }
+				end,
 				kotlin = { "ktlint" },
 				terraform = { "terraform_fmt" },
 				yaml = { "yamlfmt" },

@@ -223,7 +223,7 @@ colima-fix() {
   colima stop --force
   colima delete --force
   limactl disk unlock colima 2>/dev/null
-  colima start --memory 16
+  colima start --memory 12 --cpu 4
 }
 
 
@@ -236,3 +236,20 @@ if test -d "$HOME/.pyenv"; then
   eval "$(pyenv init -)"
 fi
 export PATH="$HOME/bin:$PATH"
+export DS_BASE_PATH=/Users/jakobjonasson/work/devops-scripts
+export PATH=$PATH:$DS_BASE_PATH/bin
+eval "$(ds --show-completions-zsh)"
+export DS_BASE_PATH=/Users/jakobjonasson/work/devops-scripts
+export PATH=$PATH:$DS_BASE_PATH/bin
+eval "$(ds --show-completions-zsh)"
+
+export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
+
+# Entra ID PostgreSQL token
+pgtoken() {
+  local account=$(az account show --query user.name -o tsv)
+  local token=$(az account get-access-token --resource-type oss-rdbms --query accessToken -o tsv)
+  echo "$token" | pbcopy
+  echo "Token copied for: $account"
+  echo "Expires in ~1 hour"
+}
