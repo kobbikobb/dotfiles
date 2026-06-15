@@ -26,6 +26,7 @@ return {
 			"dockerfile",
 			"toml",
 			"c_sharp",
+			"swift",
 			"tsx",
 			"json",
 			"graphql",

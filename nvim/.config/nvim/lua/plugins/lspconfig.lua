@@ -62,10 +62,8 @@ return {
 		-- Optimize diagnostic performance without losing information
 		vim.diagnostic.config({
 			update_in_insert = false, -- Don't update while typing (big performance win)
-			virtual_text = {
-				spacing = 4,
-				prefix = "●",
-			},
+			virtual_text = false,
+			virtual_lines = { current_line = true },
 			float = {
 				border = "rounded",
 				source = "always",
@@ -243,6 +241,7 @@ return {
 			"dockerls",
 			"bashls",
 			"rust_analyzer",
+			"sourcekit", -- Swift; ships with Xcode/CommandLineTools, not Mason
 		}
 
 		for _, server in ipairs(servers) do

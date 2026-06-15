@@ -36,6 +36,7 @@ return {
 					return { "isort", "black" }
 				end,
 				kotlin = { "ktlint" },
+				swift = { "swiftformat" },
 				terraform = { "terraform_fmt" },
 				yaml = { "yamlfmt" },
 			},
