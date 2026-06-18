@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# List open PRs ready for a first review: not draft, not yet approved, no
-# unresolved review threads, not authored by me, and not already reviewed by me.
+# List open PRs ready for a first review: human-authored (no bots), not draft,
+# not yet approved, no unresolved review threads, not mine, not already reviewed by me.
 # Output: one "<number>\t<url>\t<title>" per line. No lines = nothing to review.
 # Usage: list-reviewable-prs.sh [max-to-scan]   (default 50; repo inferred from cwd)
 set -euo pipefail
@@ -16,7 +16,7 @@ ME="$me" gh api graphql \
         pullRequests(states:OPEN,first:$limit,orderBy:{field:UPDATED_AT,direction:DESC}){
           nodes{
             number url title isDraft reviewDecision
-            author{login}
+            author{__typename login}
             reviews(last:30){nodes{author{login}}}
             reviewThreads(first:100){nodes{isResolved}}
           }
@@ -30,6 +30,8 @@ ME="$me" gh api graphql \
     | select(.reviewDecision != "APPROVED")
     | select((.reviewThreads.nodes | map(select(.isResolved | not)) | length) == 0)
     | select(.author.login != env.ME)
+    | select(.author.__typename != "Bot")
+    | select(.author.login | endswith("[bot]") | not)
     | select(([.reviews.nodes[]? | select(.author.login == env.ME)] | length) == 0)
     | "\(.number)\t\(.url)\t\(.title)"
   '
