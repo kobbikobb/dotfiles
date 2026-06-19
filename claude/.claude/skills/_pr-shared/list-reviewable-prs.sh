@@ -21,13 +21,14 @@ done
 limit="${limit:-50}"
 me=$(gh api user --jq .login)
 
-# Shared filter: not draft, not approved, no unresolved threads, not me, not a bot,
-# not already reviewed by me. Applied to either node source.
+# Shared filter: not draft, not approved, no unresolved threads, not me, not a bot
+# or mannequin (deactivated/imported accounts), not already reviewed by me.
 PRED='select(.isDraft|not)
   | select(.reviewDecision != "APPROVED")
   | select((.reviewThreads.nodes | map(select(.isResolved|not)) | length) == 0)
   | select(.author.login != $ME)
   | select(.author.__typename != "Bot")
+  | select(.author.__typename != "Mannequin")
   | select(.author.login | endswith("[bot]") | not)
   | select(([.reviews.nodes[]? | select(.author.login == $ME)] | length) == 0)'
 
@@ -59,13 +60,16 @@ fi
 out=""
 cursor=""
 while :; do
-  page=$(gql -f query="
+  if ! page=$(gql -f query="
     query(\$q:String!,\$after:String){
       search(query:\$q,type:ISSUE,first:25,after:\$after){
         pageInfo{ hasNextPage endCursor }
         nodes{ ... on PullRequest { $PR_FIELDS } }
       }
-    }" -F q="org:$org is:pr is:open draft:false" ${cursor:+-F after="$cursor"})
+    }" -F q="org:$org is:pr is:open draft:false" ${cursor:+-F after="$cursor"}); then
+    echo "warning: a search page failed after retries; list may be incomplete" >&2
+    break
+  fi
   out+=$(jq -r --arg ME "$me" ".data.search.nodes[] | $PRED
     | [.repository.nameWithOwner, (.number|tostring), .headRefOid, .url, .title] | @tsv" <<<"$page")
   out+=$'\n'
