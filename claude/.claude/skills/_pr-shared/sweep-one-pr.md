@@ -1,6 +1,6 @@
 # Sweep one PR — per-PR deep-review agent contract
 
-Used by `my-pr-sweep --org` (one agent per PR, run inside a Workflow). Each agent reviews ONE
+Used by `my-pr-approver-all --org` (one agent per PR, run inside a Workflow). Each agent reviews ONE
 PR against a local checkout and returns a structured verdict. Inputs: `repo` (owner/name),
 `number`, `headSha`, `url`, and `dryRun` (bool).
 

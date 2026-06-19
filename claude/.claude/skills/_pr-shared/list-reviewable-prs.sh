@@ -21,11 +21,14 @@ done
 limit="${limit:-50}"
 me=$(gh api user --jq .login)
 
-# Shared filter: not draft, not approved, no unresolved threads, not me, not a bot
-# or mannequin (deactivated/imported accounts), not already reviewed by me.
-PRED='select(.isDraft|not)
+# Shared filter: not archived, not draft, not approved, no unresolved threads, not me,
+# not a bot or mannequin (deactivated/imported accounts), not already reviewed by me.
+# Copilot-only unresolved threads don't count — no human is mid-conversation there.
+PRED='select(.repository.isArchived | not)
+  | select(.isDraft|not)
   | select(.reviewDecision != "APPROVED")
-  | select((.reviewThreads.nodes | map(select(.isResolved|not)) | length) == 0)
+  | select([.reviewThreads.nodes[] | select(.isResolved|not)
+            | select(any(.comments.nodes[]; .author.login != "copilot-pull-request-reviewer"))] | length == 0)
   | select(.author.login != $ME)
   | select(.author.__typename != "Bot")
   | select(.author.__typename != "Mannequin")
@@ -33,10 +36,10 @@ PRED='select(.isDraft|not)
   | select(([.reviews.nodes[]? | select(.author.login == $ME)] | length) == 0)'
 
 PR_FIELDS='number url title isDraft reviewDecision headRefOid
-  repository{ nameWithOwner }
+  repository{ nameWithOwner isArchived }
   author{ __typename login }
   reviews(last:20){ nodes{ author{ login } } }
-  reviewThreads(first:50){ nodes{ isResolved } }'
+  reviewThreads(first:50){ nodes{ isResolved comments(first:20){ nodes{ author{ login } } } } }'
 
 # Retry transient GraphQL 502s/timeouts (heavy search pages flake).
 gql(){ local i; for i in 1 2 3; do gh api graphql "$@" && return 0; sleep 2; done; return 1; }
@@ -66,7 +69,7 @@ while :; do
         pageInfo{ hasNextPage endCursor }
         nodes{ ... on PullRequest { $PR_FIELDS } }
       }
-    }" -F q="org:$org is:pr is:open draft:false" ${cursor:+-F after="$cursor"}); then
+    }" -F q="org:$org is:pr is:open draft:false archived:false" ${cursor:+-F after="$cursor"}); then
     echo "warning: a search page failed after retries; list may be incomplete" >&2
     break
   fi

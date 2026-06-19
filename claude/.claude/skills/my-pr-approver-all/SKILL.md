@@ -1,10 +1,10 @@
 ---
-name: my-pr-sweep
-description: "Sweep the open PR queue and review each one. Default scope is the current repo (full engine per PR in-session). With --org <name>, fans out across every repo in the org (one deep sub-agent per PR, via a workflow). Posts both verdicts, then reports each PR's impact, anything to know, and a look-into-these list."
+name: my-pr-approver-all
+description: "Run my-pr-approver across the whole open PR queue, not just one PR. Default scope is the current repo (full engine per PR in-session). With --org <name>, fans out across every repo in the org (one deep sub-agent per PR, via a workflow). Posts both verdicts, then reports each PR's impact, anything to know, and a look-into-these list."
 disable-model-invocation: true
 ---
 
-# My PR Sweep — review the open queue
+# My PR Approver All — approve/verdict the whole open queue
 
 Find every open PR waiting on a first review and review each. Clean ones get approved, the rest
 get request-changes — both posted. I get back, per PR: its verdict, a one-line impact, anything
@@ -32,13 +32,20 @@ Scope is the current repo by default. `--org <name>` sweeps the whole org.
    `<repo>\t<number>\t<headSha>\t<url>\t<title>`. Empty → say the queue is clear, stop.
 2. **Say the count first.** This is ~100 PRs and a real token/time spend; state how many before
    launching. If `--dry-run` was passed, note that nothing will be posted.
-3. **Launch a Workflow** to fan out (this skill opts into the Workflow call): a `pipeline()` over
-   the PR list, one stage = one deep-review agent per PR following
-   `~/.claude/skills/_pr-shared/sweep-one-pr.md`, with a StructuredOutput schema matching that
-   doc's Return block. Pass each agent its `repo / number / headSha / url` and the `dryRun` flag.
-   Let the workflow's own concurrency cap apply (clones make each agent heavier; don't override
-   it upward). Collect every returned object.
-4. Report (step below).
+3. **Classify each PR cheaply first** (one `gh pr view <n> --repo <repo> --json additions,deletions,files`
+   per PR — no checkout). A PR is **trivial** when it's small (≲40 changed lines) AND every changed
+   path is docs/config/CI (`.md`, `.txt`, README, CI workflow YAML, `*.tfvars`, lockfiles) or the
+   diff is purely subtractive. Everything else is **substantive**. Carry the tier with each PR.
+4. **Launch a Workflow** to fan out (this skill opts into the Workflow call): a `pipeline()` over
+   the PR list, one stage = one review agent per PR, with a StructuredOutput schema matching the
+   `sweep-one-pr.md` Return block. Scale effort to the tier — don't flat-rate a 2-line doc tweak
+   like a gateway rewrite:
+   - **substantive** → full deep review per `~/.claude/skills/_pr-shared/sweep-one-pr.md` (checkout, owned lenses, hand correctness pass).
+   - **trivial** → one light agent at `effort: 'low'`: read the diff (`gh pr diff`), a single careful pass, no checkout, no parallel lenses; same posting mechanics and return schema.
+   Pass each agent its `repo / number / headSha / url`, tier, and the `dryRun` flag. Let the
+   workflow's own concurrency cap apply (clones make substantive agents heavier; don't override it
+   upward). Collect every returned object.
+5. Report (step below).
 
 ### Report (both scopes — chat only, nothing extra on the PRs)
 
@@ -55,9 +62,10 @@ Scope is the current repo by default. `--org <name>` sweeps the whole org.
 - **Impact on every PR.** Always summarize what each PR does in one line, approved or not.
 - **Flag what I'd want to know even on approvals.** `headsUp` is for the things a clean approve
   still shouldn't bury: a DB migration, an auth/PII path, a breaking change, a big surface.
-- **Deep per PR.** Org agents review against a real checkout (clone at head), not just the diff.
-  They run the owned lenses + a hand-done correctness pass, NOT the `code-review` skill (its
-  finders orphan when nested in a sub-agent).
+- **Scale effort to the PR.** Substantive PRs get the full deep review against a real checkout
+  (owned lenses + hand-done correctness pass, NOT the `code-review` skill — its finders orphan
+  nested in a sub-agent). Trivial PRs (small, docs/config/CI-only, or purely subtractive) get one
+  light low-effort pass over the diff. Don't flat-rate every PR — that's the main token sink.
 - **Skip and report, don't guess.** A PR that errors mid-review (fetch fails, diff too big) is
   `verdict:error`, goes on the look-into-these list. Never half-post a review.
 - **Never approve a draft.** The script filters drafts; hold the line anyway.
