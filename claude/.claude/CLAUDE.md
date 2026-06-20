@@ -31,6 +31,7 @@
 - Tests should be relevant and test behaviour, not implementation details.
 
 ## Git
+- **PR descriptions: as lean as possible, plain language.** Ideally one sentence — the problem and the suggested fix — that anyone can grasp without being in the loop or reading the code. Always try to cut it shorter. No code walkthroughs, no file-by-file rundown, no internals. Add a line of detail only when the one-liner genuinely isn't enough; link the ticket/logs for the deep context instead of restating it.
 - When creating PRs, add labels: `bug` (fix), `enhancement` (feature/improvement), `upgrade` (dependency)
 - Use `gh pr edit <PR_NUMBER> --add-label "<label>"`
 - If branch has an issue key (e.g. `PROJ-1234-fix-bug`), prefix commits: `PROJ-1234: Summary`
