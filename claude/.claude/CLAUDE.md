@@ -34,14 +34,14 @@
 - **PR descriptions: as lean as possible, plain language.** Ideally one sentence — the problem and the suggested fix — that anyone can grasp without being in the loop or reading the code. Always try to cut it shorter. No code walkthroughs, no file-by-file rundown, no internals. Add a line of detail only when the one-liner genuinely isn't enough; link the ticket/logs for the deep context instead of restating it.
 - When creating PRs, add labels: `bug` (fix), `enhancement` (feature/improvement), `upgrade` (dependency)
 - Use `gh pr edit <PR_NUMBER> --add-label "<label>"`
-- Issue keys go in the branch name and PR, not in commit messages.
+- If branch has an issue key (e.g. `PROJ-1234-fix-bug`), prefix commits: `PROJ-1234: Summary`
 
 ## Jira
 - Jira CLI may be installed at `/opt/homebrew/bin/jira` on macOS
 - Create issues: `jira issue create -p <PROJECT> -t <Type> -s "summary" -b "description" --no-input`
 - Issue types: Bug, Task, Story
 - When creating PRs for fixes, create a corresponding Jira issue and link it in the PR description
-- Use Jira issue keys in branch names and PR titles, not commit messages
+- Use Jira issue keys in branch names and commit messages
 
 ## Testing Conventions
 - All test descriptions MUST start with `should`
