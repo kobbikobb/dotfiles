@@ -71,5 +71,5 @@ Scope is the current repo by default. `--org <name>` sweeps the whole org.
 - **Never approve a draft.** The script filters drafts; hold the line anyway.
 - The script excludes PRs I authored or already reviewed, so reruns resume cleanly. Don't re-add them.
 - **`--dry-run`** reviews and reports but posts nothing. Recommend it for the first org run
-  (e.g. `--org lucinity 10 --dry-run`), eyeball the verdicts, then go live.
+  (e.g. `--org <name> 10 --dry-run`), eyeball the verdicts, then go live.
 - **Cleanup:** remove `/tmp/pr-sweep` when the org sweep finishes.

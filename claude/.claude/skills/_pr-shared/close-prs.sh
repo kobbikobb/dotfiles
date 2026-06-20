@@ -6,7 +6,7 @@
 # Usage:
 #   <something that emits repo<TAB>number> | close-prs.sh [--yes] [--comment "msg"]
 # Example (stale deleted-account PRs):
-#   gh search prs --owner lucinity --state open --limit 1000 --json author,repository,number \
+#   gh search prs --owner "$(gh repo view --json owner --jq .owner.login)" --state open --limit 1000 --json author,repository,number \
 #     | jq -r '.[] | select(.author.login|test("^[A-Za-z0-9]{38,40}$")) | "\(.repository.nameWithOwner)\t\(.number)"' \
 #     | close-prs.sh --yes --comment "Stale, closing during cleanup. Reopen if needed."
 set -euo pipefail

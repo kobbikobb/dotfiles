@@ -7,7 +7,7 @@
 # Usage:
 #   <something that emits repo<TAB>number> | merge-prs.sh [--yes] [--approve] [--method squash|merge|rebase]
 # Example (every patches-approved bot PR in the org):
-#   gh search prs --owner lucinity --state open --label patches-approved --limit 200 \
+#   gh search prs --owner "$(gh repo view --json owner --jq .owner.login)" --state open --label patches-approved --limit 200 \
 #     --json repository,number --jq '.[] | "\(.repository.nameWithOwner)\t\(.number)"' \
 #     | merge-prs.sh --yes --approve
 set -euo pipefail

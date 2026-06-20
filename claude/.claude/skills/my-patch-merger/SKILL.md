@@ -14,9 +14,10 @@ bypass lives in CI. This skill is that merge step: find the labeled PRs and squa
 
 ## Workflow
 
-1. Find the queue (default owner `lucinity`, max 200):
+1. Find the queue (owner defaults to the current repo's org, max 200):
    ```bash
-   gh search prs --owner lucinity --state open --label patches-approved --limit 200 \
+   gh search prs --owner "$(gh repo view --json owner --jq .owner.login)" \
+     --state open --label patches-approved --limit 200 \
      --json repository,number,title \
      --jq '.[] | "\(.repository.nameWithOwner)\t\(.number)\t\(.title)"'
    ```
