@@ -22,6 +22,8 @@ returns a compact result. Inputs: `repo` (owner/name), `number`, `branch`, `url`
      gaps, security findings, non-trivial logic/build) — do NOT attempt them, do NOT block; record
      each in `deferred` for the report. Still reply on those threads in plain prose saying it needs
      the author's call.
+   - **Single pass (engine G).** Do NOT wait or poll for the bot re-review your push triggers — one
+     A–F pass, then return. A rerun of `my-pr-fixer-all` re-surfaces the PR and mops up new threads.
    - **`dryRun`** → do all the evaluation and produce the report, but push nothing, post no replies,
      resolve no threads.
 
@@ -35,6 +37,7 @@ returns a compact result. Inputs: `repo` (owner/name), `number`, `branch`, `url`
   "number": 123,
   "url": "https://github.com/...",
   "status": "fixed" | "partial" | "nothing-to-do" | "error",
+  "changes": ["one line per actual fix, with location: what changed and why — e.g. 'ExportLogic.ts:120 pass MAX_CASES to query, was unbounded'"],
   "checksFixed": ["lint", "build"],        // CI categories fixed, [] if none
   "commentsAddressed": 0,                   // threads fixed with code + resolved
   "commentsDeclined": 0,                    // threads replied-to but not changed

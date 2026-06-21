@@ -38,18 +38,19 @@ One compact block per PR, in this exact shape — no tables, no per-file rundown
 
 ```
 <full url>  <status>
-  did:  <one line: CI fixed + N comments addressed/M declined, or "nothing">
+  did:  <one line per actual fix from `changes`, with location; "nothing" if none>
   you:  <one line per action I must take — deferred items + needsMe; omit the line entirely if none>
 ```
 
-- **`did`** is always one line. Roll `checksFixed` + `commentsAddressed`/`commentsDeclined` into it
-  (e.g. `fixed lint+build, addressed 2 comments, declined 1`). `nothing` when the agent changed
-  nothing.
+- **`did`** lists the real changes from `changes` — one line each, keeping the location, so I see
+  *what* was fixed, not just a count. Add a trailing `(N comments resolved, M declined)` from the
+  counts. `nothing` when the agent changed nothing.
 - **`you`** only appears when there's a real action: each `deferred` item (one line, keep its
   location) and the `needsMe` line. A PR that came back `fixed`/`nothing-to-do` with empty
   `deferred` and null `needsMe` prints just the url + status line — no `you:`.
-- End with a one-line tally: `N fixed · M need me · K errors`. If nothing needs me anywhere, say
-  the queue is clean and stop.
+- End with a one-line tally: `N fixed · M need me · K errors`. If anything was pushed, add: bot
+  re-review is pending on those PRs — rerun to mop up the new threads. If nothing needs me anywhere,
+  say the queue is clean and stop.
 
 ## Rules
 

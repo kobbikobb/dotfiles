@@ -66,12 +66,15 @@ Resolve every thread you fixed with code (leave declined ones unresolved):
 gh api graphql -f query='mutation($id:ID!){resolveReviewThread(input:{threadId:$id}){thread{isResolved}}}' -f id='<thread id>'
 ```
 
-## G. Re-poll after your push (bots re-review the new commit)
+## G. After your push — bots re-review the new commit (caller-controlled)
 
 Your push makes Copilot/coderabbit re-review and re-runs CI, spawning **new** threads this pass never
-saw. So loop: wait for the new run to leave `pending` (`gh pr checks <number>`), give bots ~30–60s,
-then re-run A–F against the current state. Repeat until a pass finds no failing checks and no
-actionable thread (cap ~3 passes; if still churning, stop and report what's left).
+saw. The caller decides whether to wait for them:
+- **Loop** (interactive, one PR): wait for the new run to leave `pending` (`gh pr checks <number>`),
+  give bots ~30–60s, re-run A–F. Repeat until a pass finds no failing checks and no actionable
+  thread (cap ~3 passes; if still churning, stop and report).
+- **Single pass** (fan-out): do NOT wait or poll. Finish after one A–F pass and report that bot
+  re-review is pending — a rerun re-surfaces the PR and mops up the new threads.
 
 ## Rules (both callers inherit)
 
