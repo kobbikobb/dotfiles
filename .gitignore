@@ -1,2 +1,5 @@
 .DS_Store
 .serena/
+
+# Private, machine-local skills (org-specific, never published)
+claude/.claude/skills/daily/
