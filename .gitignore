@@ -3,3 +3,6 @@
 
 # Private, machine-local skills (org-specific, never published)
 claude/.claude/skills/daily/
+claude/.claude/skills/my-patch-merger/
+claude/.claude/skills/create-jira-epic/
+claude/.claude/skills/create-jira-story/

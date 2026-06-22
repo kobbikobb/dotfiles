@@ -46,7 +46,7 @@ Read the referenced file + context, then decide **does it make sense to address?
 ## D. Quality gates, commit, push
 
 If code changed: run `/precheck`; stage and commit with the branch issue-key prefix
-(`PLAT-1234: Address review comments`) — no key, stop and ask for a rename; group related fixes into
+(`PROJ-1234: Address review comments`) — no key, stop and ask for a rename; group related fixes into
 one commit. Then push per the caller's rule. **Never force-push.**
 
 ## E. Answer every in-scope thread (only after a successful push)
