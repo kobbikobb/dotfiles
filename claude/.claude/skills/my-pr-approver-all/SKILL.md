@@ -51,9 +51,16 @@ Scope is the current repo by default. `--org <name>` sweeps the whole org.
 
 - **One line per PR:** verdict, number/repo, the one-line **impact**, and `⚠ <headsUp>` when set.
   Group by repo for the org sweep.
-- **Heads-up roll-up:** a short list of every PR whose `headsUp` is set (even approved ones) —
-  migrations, auth/security surfaces, breaking changes, broad blast radius.
+- **Heads-up roll-up:** a list of every PR whose `headsUp` is set (even approved ones) —
+  migrations, auth/security surfaces, breaking changes, broad blast radius. Each entry leads with
+  the bare PR URL so I can click straight through, then spells out three things: **what I need to
+  know** (the surface or change that matters), **what action to take** (confirm a plan, merge in
+  waves, watch a metric, nothing), and **the risk** (blast radius + reversibility, e.g. "13 prod
+  tenants, revertible"). Don't compress this to a bare tag — give me enough to decide without
+  opening the PR.
 - **Look into these:** bare URLs for every `changes-requested` or `error` PR.
+- **Whenever a line asks me to look at, confirm, or act on a PR, give the bare PR URL on that
+  line** — never just a number/repo I have to go find. A clickable URL on every actionable item.
 - If everything was clean with no heads-up, say the queue is clear.
 
 ## Rules
@@ -61,7 +68,8 @@ Scope is the current repo by default. `--org <name>` sweeps the whole org.
 - **Post both verdicts.** Approve the clean, request-changes the rest. Both land on the PR.
 - **Impact on every PR.** Always summarize what each PR does in one line, approved or not.
 - **Flag what I'd want to know even on approvals.** `headsUp` is for the things a clean approve
-  still shouldn't bury: a DB migration, an auth/PII path, a breaking change, a big surface.
+  still shouldn't bury: a DB migration, an auth/PII path, a breaking change, a big surface. When
+  set, it carries what-to-know + what-action-to-take + the-risk, not just a label.
 - **Scale effort to the PR.** Substantive PRs get the full deep review against a real checkout
   (owned lenses + hand-done correctness pass, NOT the `code-review` skill — its finders orphan
   nested in a sub-agent). Trivial PRs (small, docs/config/CI-only, or purely subtractive) get one

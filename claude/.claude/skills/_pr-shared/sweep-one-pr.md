@@ -43,7 +43,7 @@ PR against a local checkout and returns a structured verdict. Inputs: `repo` (ow
   "verdict": "approved" | "changes-requested" | "error",
   "blockerCount": 0,            // Risky + Major count
   "impact": "one plain line: what this PR changes and who/what it affects",
-  "headsUp": "anything I should know even if approved (migration, auth/security surface, breaking change, broad blast radius, sketchy area), else null",
+  "headsUp": "anything I should know even if approved, else null. When set, cover three things in plain prose: WHAT I NEED TO KNOW (the surface/change that matters — migration, auth/PII path, breaking change, broad blast radius, sketchy area), WHAT ACTION TO TAKE (confirm a plan, merge in waves, watch a metric, coordinate a deploy, or nothing), and THE RISK (blast radius + reversibility, e.g. '13 prod tenants, revertible'). Enough that I can decide without opening the PR.",
   "reviewUrl": "the posted review URL, or null on dry-run/error"
 }
 ```

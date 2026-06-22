@@ -13,6 +13,11 @@ changes when it is not. Comments read as my own: humble, question-led, no agent 
 
 ## Workflow
 
+0. **Bail on my own PRs.** Resolve the target's author (run Step A's `fetch-pr.sh` for the
+   `author` field) and compare to `gh api user --jq .login`. If they match, stop immediately:
+   GitHub rejects self-approval (`Can not approve your own pull request`), so the verdict can
+   never be posted. Report "skipped, your own PR" and do not run the engine.
+
 1. Read `~/.claude/skills/_pr-shared/review-engine.md` and run it (Steps A-E) to produce the
    inline comments (off-diff findings anchored to the nearest changed line), severity counts, and the recommended verdict. Run this
    skill in the main session, not as a sub-agent, so the engine's `code-review` pre-pass
