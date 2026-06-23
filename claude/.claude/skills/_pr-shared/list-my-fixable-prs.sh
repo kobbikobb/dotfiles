@@ -21,18 +21,21 @@ done
 limit="${limit:-50}"
 me=$(gh api user --jq .login)
 
-# A PR is fixable when the latest commit's check rollup is FAILURE/ERROR, OR some
-# unresolved thread's last comment isn't mine (an actionable reply I still owe).
+# A PR is fixable when the latest commit's check rollup is FAILURE/ERROR, OR it
+# conflicts with its base (needs a rebase), OR some unresolved thread's last
+# comment isn't mine (an actionable reply I still owe).
 PRED='select(.isDraft | not)
   | select(
       (.commits.nodes[0].commit.statusCheckRollup.state | IN("FAILURE","ERROR"))
+      or
+      (.mergeable == "CONFLICTING")
       or
       ([.reviewThreads.nodes[]
         | select(.isResolved | not)
         | select((.comments.nodes | last | .author.login) != $ME)] | length > 0)
     )'
 
-PR_FIELDS='number url title isDraft headRefName headRefOid
+PR_FIELDS='number url title isDraft headRefName headRefOid mergeable
   repository{ nameWithOwner isArchived }
   commits(last:1){ nodes{ commit{ statusCheckRollup{ state } } } }
   reviewThreads(first:50){ nodes{ isResolved comments(first:50){ nodes{ author{ login } } } } }'

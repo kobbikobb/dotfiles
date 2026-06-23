@@ -62,8 +62,9 @@ One compact block per PR, in this exact shape — no tables, no per-file rundown
   gets its own worktree under `platform.worktrees/`, removed when done (see [[worktree-per-task]]).
 - **Skip and report, don't guess.** A PR whose worktree/fetch/push fails is `status:"error"` and
   goes on the needs-me list. Never half-push.
-- **Never force-push, never weaken tests, never edit CI to go green** — these carry through from
-  `my-pr-fixer`; the agents inherit them.
-- The list script only surfaces PRs with a real problem, so reruns resume cleanly — a PR with no
-  failing check and no actionable thread won't reappear.
+- **Never weaken tests, never edit CI to go green** — these carry through from `my-pr-fixer`; the
+  agents inherit them. **Force-push only with `--force-with-lease`, only after a Step 0 rebase** —
+  clean rebase auto-pushes; a conflict that fails the worktree build/test gate is deferred, not pushed.
+- The list script only surfaces PRs with a real problem, so reruns resume cleanly — a PR that's
+  mergeable with no failing check and no actionable thread won't reappear.
 - **`--dry-run`** evaluates and reports but changes nothing. Recommend it for the first org run.

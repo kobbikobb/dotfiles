@@ -15,8 +15,12 @@ returns a compact result. Inputs: `repo` (owner/name), `number`, `branch`, `url`
    ```
    Work entirely inside `$wt`. The branch must track `origin/<branch>` so pushes land on the PR.
 
-2. **Run the fixer engine** against `$wt` — `~/.claude/skills/_pr-shared/fixer-engine.md`, Steps A–G,
-   for PR `<number>`. Push with `git push origin <branch>`. Two binding overrides for fan-out:
+2. **Run the fixer engine** against `$wt` — `~/.claude/skills/_pr-shared/fixer-engine.md`, Steps 0
+   then A–G, for PR `<number>`. Three binding overrides for fan-out:
+   - **Rebase (engine 0).** Run `rebase-onto-base.sh rebase "$wt" <branch>`. Exit 1 → skip on. Exit 0
+     (clean) → `rebase-onto-base.sh push "$wt" <branch>`. Exit 3 (conflicts) → resolve, `git rebase
+     --continue`, run the project's build/tests in `$wt`: green → `rebase-onto-base.sh push "$wt"
+     <branch>`; red → `git rebase --abort`, push nothing, record the conflict in `deferred`.
    - **Non-interactive.** There is no user to ask. **Auto-fix only low-risk** (lint/format, trivial
      build errors — missing imports, typos, unused vars). **Skip high-risk** (test failures, coverage
      gaps, security findings, non-trivial logic/build) — do NOT attempt them, do NOT block; record
@@ -47,7 +51,9 @@ returns a compact result. Inputs: `repo` (owner/name), `number`, `branch`, `url`
 }
 ```
 
-- `status:"nothing-to-do"` when a fresh pass finds no failing checks and no actionable threads.
+- A rebase goes in `changes` (e.g. "rebased onto main, force-pushed with lease"); a conflict that
+  failed the build/test gate goes in `deferred`.
+- `status:"nothing-to-do"` when a fresh pass finds no conflicts, no failing checks, and no actionable threads.
 - `status:"partial"` when something was fixed but `deferred` or `needsMe` is non-empty.
 - On `error` (worktree/fetch failed, push rejected), set `status:"error"`, put the reason in
   `needsMe`, push nothing.
