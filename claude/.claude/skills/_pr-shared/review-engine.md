@@ -89,9 +89,11 @@ Merge `code-review`'s raw findings (Step B) with the lens findings (Step C), the
 
 ## Step E: Recommended verdict
 
-- Any **Risky** → request changes; note it likely needs a discussion.
-- Any **Major** (no Risky) → request changes.
+- Any **Risky** → comment (don't approve); note it likely needs a discussion.
+- Any **Major** (no Risky) → comment (don't approve).
 - Only **Minor/Nit**, or nothing → approve.
+
+Never request changes — it hard-locks the branch until this exact reviewer clears it. Comment leaves the findings visible without blocking; the author decides.
 
 ## Output of the engine
 
