@@ -16,9 +16,12 @@ thread. Replies read as mine: plain, humble, no agent tells.
 ## Workflow
 
 1. **Identify the PR.** If `$ARGUMENTS` is a number, use it; else `gh pr view --json number,title,headRefName,url`.
-2. **Run the fixer engine** — `~/.claude/skills/_pr-shared/fixer-engine.md`, Steps A–G, against this
-   PR on the current branch. Push with `git push origin <branch>` (never force-push). Two
-   interactive points specific to this skill:
+2. **Run the fixer engine** — `~/.claude/skills/_pr-shared/fixer-engine.md`, Steps 0 then A–G,
+   against this PR on the current branch. Push with `git push origin <branch>`, or
+   `rebase-onto-base.sh push <worktree> <branch>` after a Step 0 rebase. Interactive points specific
+   to this skill:
+   - **Rebase (engine 0):** a clean rebase is automatic; if it hits conflicts, show me the
+     conflicting files and **wait for my confirmation** before resolving and force-pushing.
    - **CI fixes (engine A):** fix low-risk automatically; for high-risk (test failures, coverage,
      security, non-trivial build/logic) show what failed, the root cause, and the proposed fix, then
      **wait for my confirmation** before touching it.
@@ -28,8 +31,9 @@ thread. Replies read as mine: plain, humble, no agent tells.
 
 ## Important rules
 
-Engine rules apply (no CI edits, no weakened tests, reply only after push, no force-push, group
-fixes, answer every actionable thread, loop until a clean pass). On top of those:
+Engine rules apply (no CI edits, no weakened tests, reply only after push, force-push only with
+`--force-with-lease` after a rebase, group fixes, answer every actionable thread, loop until a clean
+pass). On top of those:
 
 - **Decline, don't block.** Address every comment that makes sense; for the rest, reply with the
   reason. Only leave a thread for me when it genuinely needs my decision — say so in the reply.

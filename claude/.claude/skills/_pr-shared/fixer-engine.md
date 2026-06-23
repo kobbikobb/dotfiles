@@ -4,6 +4,22 @@ The mechanics shared by `my-pr-fixer` (interactive, one PR) and `fix-one-pr.md` 
 per PR). The caller identifies the PR (`number`, `owner`, `repo`) and sets how high-risk work and
 pushes are handled; this engine is the how. Token-lean throughout: read only what you'll act on.
 
+## 0. Rebase onto the base branch when the PR conflicts
+
+A conflicting branch can't merge no matter how green CI is. The deterministic git plumbing lives in
+`~/.claude/skills/_pr-shared/rebase-onto-base.sh` — it owns every force-push (always `--force-with-lease`):
+```bash
+rebase-onto-base.sh rebase <worktree> <branch> [base]   # 0=clean (not pushed) · 1=nothing to do · 3=conflicts left in tree
+```
+- **Exit 1** → branch is current, skip to Step A.
+- **Exit 0** (clean rebase) → run nothing extra; force-push via `rebase-onto-base.sh push <worktree> <branch>`.
+- **Exit 3** (conflicts in the tree) → resolve them, `git rebase --continue`, then run the project's
+  build/tests in the worktree as a gate. **Green** → `rebase-onto-base.sh push <worktree> <branch>`.
+  **Red** → `git rebase --abort`, push nothing. The caller decides who resolves: interactive asks
+  first; fan-out auto-resolves and defers when the gate is red.
+
+Never type a raw `git push --force` — the script is the only thing that force-pushes, always with lease.
+
 ## A. Fix CI / pipeline failures
 
 Pull **failing** checks only — never dump the green list:
@@ -47,7 +63,9 @@ Read the referenced file + context, then decide **does it make sense to address?
 
 If code changed: run `/precheck`; stage and commit with the branch issue-key prefix
 (`PROJ-1234: Address review comments`) — no key, stop and ask for a rename; group related fixes into
-one commit. Then push per the caller's rule. **Never force-push.**
+one commit. Then push per the caller's rule: `git push origin <branch>` for normal pushes, or
+`rebase-onto-base.sh push <worktree> <branch>` when a Step 0 rebase rewrote history. **Never type a
+raw `git push --force`.**
 
 ## E. Answer every in-scope thread (only after a successful push)
 
@@ -81,7 +99,7 @@ saw. The caller decides whether to wait for them:
 - **Never modify CI config** to go green — fix the actual code.
 - **Never weaken a test** — a failing test usually means the code is wrong.
 - **Reply only after a successful push** — never claim "Fixed" before the push lands.
-- **Never force-push; never dismiss reviews.**
+- **Force-push only with `--force-with-lease`, only after a Step 0 rebase; never plain `--force`, never dismiss reviews.**
 - **Group related fixes into one commit** — not one per comment.
 - **Bots review as `COMMENTED`** — don't filter top-level reviews on `CHANGES_REQUESTED` alone.
 - **Answer every actionable thread before finishing** — an unresolved bot thread with no reply is a
