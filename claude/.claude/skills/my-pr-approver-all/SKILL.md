@@ -7,7 +7,7 @@ disable-model-invocation: true
 # My PR Approver All — approve/verdict the whole open queue
 
 Find every open PR waiting on a first review and review each. Clean ones get approved, the rest
-get request-changes — both posted. I get back, per PR: its verdict, a one-line impact, anything
+get a comment-only review (never request-changes) — both posted. I get back, per PR: its verdict, a one-line impact, anything
 I should know even on the approved ones, and a **Look into these** list for blockers/errors.
 
 Scope is the current repo by default. `--org <name>` sweeps the whole org.
@@ -65,7 +65,7 @@ Scope is the current repo by default. `--org <name>` sweeps the whole org.
 
 ## Rules
 
-- **Post both verdicts.** Approve the clean, request-changes the rest. Both land on the PR.
+- **Post both verdicts.** Approve the clean, comment (never request-changes) on the rest. Both land on the PR.
 - **Impact on every PR.** Always summarize what each PR does in one line, approved or not.
 - **Flag what I'd want to know even on approvals.** `headsUp` is for the things a clean approve
   still shouldn't bury: a DB migration, an auth/PII path, a breaking change, a big surface. When
