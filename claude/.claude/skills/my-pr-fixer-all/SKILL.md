@@ -11,15 +11,17 @@ unresolved review thread whose last comment isn't mine — and hand each to its 
 isolated worktree. I get back, per PR: what CI it fixed, which comments it addressed vs declined,
 anything high-risk it **deferred** to me, and anything that needs my call.
 
-Scope is the current repo by default. `--org <name>` sweeps every repo in the org.
+Scope is the **whole org** by default (auto-detected from the current repo). Use `--repo` to limit to the current repo only.
 
-**Argument:** $ARGUMENTS — `[--org <name>] [max] [--dry-run]`. `max` caps PRs (default 50);
+**Argument:** $ARGUMENTS — `[--org <name>] [--repo] [max] [--dry-run]`. `max` caps PRs (default 50);
 `--dry-run` evaluates and reports but pushes/posts nothing.
 
 ## Workflow
 
-1. **List the work.** `~/.claude/skills/_pr-shared/list-my-fixable-prs.sh [--org <name>] <max>`.
-   Current repo → `<number>\t<branch>\t<url>\t<title>`. Org → `<repo>\t<number>\t<headSha>\t<branch>\t<url>\t<title>`.
+1. **List the work.** Auto-detect the org: `org=$(gh repo view --json owner --jq '.owner.login')`.
+   Unless `--repo` was passed, always use `--org $org`. Run:
+   `~/.claude/skills/_pr-shared/list-my-fixable-prs.sh --org <org> <max>` (or without `--org` if `--repo`).
+   Org → `<repo>\t<number>\t<headSha>\t<branch>\t<url>\t<title>`. Current repo → `<number>\t<branch>\t<url>\t<title>`.
    Empty → say the queue is clean, stop.
 2. **Say the count first**, then launch. This pushes commits and replies on real PRs — state how
    many PRs and whether `--dry-run` is on before doing anything.

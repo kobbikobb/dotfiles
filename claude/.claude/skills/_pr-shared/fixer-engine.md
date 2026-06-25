@@ -55,11 +55,15 @@ gh pr view <number> --json reviews | jq --arg me "$ME" '.reviews[]|select((.stat
 ## C. Evaluate each comment
 
 Read the referenced file + context, then decide **does it make sense to address?**
-- **Yes** → fix it (Step D), reply `Fixed: <what changed>`, resolve the thread.
-- **No** → reply in plain prose with the reason (disagreement + why, out of scope, already handled,
-  or needs the author's call). Don't touch code; leave the thread unresolved.
+- **Yes** → fix it (Step D), reply starting with `Fixed: <what changed>`, resolve the thread (Step F).
+- **No** → reply starting with `Not fixed: <reason — disagreement + why, out of scope, already handled,
+  or needs the author's call>`. Don't touch code; leave the thread unresolved.
+
+Every in-scope thread gets a reply. Skipping a thread entirely is a failure.
 
 ## D. Quality gates, commit, push
+
+**API-surface changes need the snapshot + sanity gate — `tsc`/`vitest`/`/precheck` do NOT cover it.** If the diff touches `packages/api/src/routes/**` or otherwise changes the public API (adds, removes, or reshapes an endpoint, schema, or classification), the committed `packages/sdk/openapi.snapshot.json` goes stale and CI's `API sanity` + `CI required` fail every time — the most common false-green this engine ships. Regenerate it: `npm run --silent generate:openapi --workspace=packages/api > packages/sdk/openapi.snapshot.json` then `npm run generate:types --workspace=packages/sdk`, and commit both. This needs **no real DB** — the dump only reads route schemas via `app.ready()` and the postgres client connects lazily, so a dummy `DATABASE_URL` is enough. `test:sanity` (route-exercises-real-DB) does need Postgres; if you can't boot one, say so and let CI's `API sanity (real DB)` job verify — never claim green on a route change without at least the snapshot regenerated.
 
 If code changed: run `/precheck`; stage and commit with the branch issue-key prefix
 (`PROJ-1234: Address review comments`) — no key, stop and ask for a rename; group related fixes into
@@ -69,17 +73,23 @@ raw `git push --force`.**
 
 ## E. Answer every in-scope thread (only after a successful push)
 
+**Mandatory — every in-scope thread gets a reply. No exceptions.** Reply format is strict:
+- Addressed with code: reply starts with `Fixed: <what changed>`
+- Declined: reply starts with `Not fixed: <reason>`
+
 Discard the POST response — `--jq .html_url` returns one URL, not the whole comment object:
 ```bash
-gh api repos/<owner>/<repo>/pulls/<number>/comments/<databaseId>/replies -f body="<reply>" --jq .html_url
+gh api repos/<owner>/<repo>/pulls/<number>/comments/<databaseId>/replies -f body="Fixed: ..." --jq .html_url
+# or:
+gh api repos/<owner>/<repo>/pulls/<number>/comments/<databaseId>/replies -f body="Not fixed: ..." --jq .html_url
 ```
-- **Fixed:** `Fixed: <what changed>`  · **Not fixed:** `<why, plain prose>`
-Top-level review comments: `gh pr comment <number> --body "<reply>"`. Keep replies short, humble,
-plain — no footer, no agent tells (em-dashes, `path:line`). They're team-visible and read as mine.
+Top-level review comments: `gh pr comment <number> --body "Fixed: ..."` or `"Not fixed: ..."`.
+Keep replies short, humble, plain — no footer, no agent tells (em-dashes, `path:line`). They're team-visible and read as mine.
 
 ## F. Resolve addressed threads
 
-Resolve every thread you fixed with code (leave declined ones unresolved):
+**Mandatory — resolve every thread you fixed with code. This is not optional.**
+Leave declined threads unresolved. Run the mutation for each fixed thread and verify `isResolved` is `true`:
 ```bash
 gh api graphql -f query='mutation($id:ID!){resolveReviewThread(input:{threadId:$id}){thread{isResolved}}}' -f id='<thread id>'
 ```
@@ -103,4 +113,5 @@ saw. The caller decides whether to wait for them:
 - **Group related fixes into one commit** — not one per comment.
 - **Bots review as `COMMENTED`** — don't filter top-level reviews on `CHANGES_REQUESTED` alone.
 - **Answer every actionable thread before finishing** — an unresolved bot thread with no reply is a
-  failure, not an acceptable end state.
+  failure, not an acceptable end state. Replies must start with `Fixed:` or `Not fixed:`.
+- **Resolve every fixed thread** (Step F) — leaving an addressed thread unresolved is a failure.
