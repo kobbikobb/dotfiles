@@ -1,0 +1,68 @@
+<title>__TITLE__</title>
+<style>
+  :root{
+    --bg:#0f1115;--panel:#171a21;--panel2:#1d212b;--ink:#e7ebf0;--muted:#9aa4b2;
+    --line:#2a2f3a;--accent:#6ea8fe;--good:#5bd6a0;--warn:#f0c674;--bad:#e8836f;
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:40px 24px 80px}
+  h1{font-size:28px;margin:0 0 4px;letter-spacing:-.02em}
+  .sub{color:var(--muted);margin:0 0 28px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:36px 0 14px;font-weight:600}
+  code{font-family:var(--mono);background:#11141a;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12.5px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .card h3{margin:0 0 2px;font-size:18px}
+  .card .tag{font-size:12px;color:var(--muted);margin:0 0 12px}
+  .badges{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}
+  .b{font-size:11.5px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);font-weight:600}
+  .b.low{color:var(--good);border-color:#2c5345}
+  .b.med{color:var(--warn);border-color:#5a4d28}
+  .b.high{color:var(--bad);border-color:#5a322a}
+  .card p{margin:0 0 10px;font-size:14px}
+  .card .lab{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;display:block;margin:0 0 3px}
+  .q{background:var(--panel2);border-left:2px solid var(--accent);border-radius:0 6px 6px 0;padding:8px 12px;margin:12px 0 0;font-size:13px;color:var(--muted)}
+  .q b{color:var(--ink);font-weight:600}
+  table{width:100%;border-collapse:collapse;margin-top:6px;font-size:13.5px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+  td b{color:var(--accent)}
+  .rec{background:linear-gradient(180deg,#172033,#141821);border:1px solid #2c3950;border-radius:12px;padding:18px 20px;margin-top:8px}
+  .rec b{color:var(--accent)}
+  ul.gaps{margin:6px 0 0;padding-left:18px}
+  ul.gaps li{margin:4px 0;color:var(--muted)}
+  ul.gaps li b{color:var(--ink)}
+</style>
+
+<div class="wrap">
+  <h1>__TITLE__</h1>
+  <p class="sub">__SUBTITLE__ Annotate anything to give feedback.</p>
+
+  <h2>Context</h2>
+  __CONTEXT__
+
+  <h2>Options</h2>
+  <div class="cards">
+    <!-- repeat per option:
+    <div class="card">
+      <h3>A · __NAME__</h3>
+      <p class="tag">__ONE_LINER__</p>
+      <div class="badges"><span class="b">Effort: __E__</span><span class="b low|med|high">Risk: __R__</span></div>
+      <span class="lab">Approach</span><p>__APPROACH__</p>
+      <span class="lab">Effort</span><p>__EFFORT_DETAIL__</p>
+      <div class="q"><b>Q:</b> __OPEN_QUESTION__</div>
+    </div>
+    -->
+  </div>
+
+  <h2>Recommendation</h2>
+  <div class="rec"><p>__RECOMMENDATION__</p></div>
+
+  <h2>Open questions / gaps</h2>
+  <ul class="gaps">
+    <!-- <li><b>__GAP__</b> — __DETAIL__</li> -->
+  </ul>
+</div>
