@@ -36,7 +36,7 @@ description: Create a well-scoped Jira EPIC via jira-axi — a large body of wor
 (Pass `--project <PROJECT>` unless it equals the script's own default.)
 
 ## After creating — known limits
-Creation here **cannot set start/due dates or assignee** (acli can't write `duedate`/`customfield_10015` or any custom field via `edit`). Set dates in the Jira **Timeline/Plans UI**, and assignee in the Jira UI; give the user exact values. To fetch an accountId for reference (acli — jira-axi doesn't surface accountId):
+Creation here **cannot set start/due dates or assignee**. Set dates in Jira **Timeline/Plans UI**, assignee in Jira UI; give user exact values. AccountId lookup (acli):
 `acli jira workitem search --jql 'assignee = "<email>"' --fields assignee --json`
 
 ## Optional review pass

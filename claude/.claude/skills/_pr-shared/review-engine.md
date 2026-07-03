@@ -98,16 +98,13 @@ Merge `code-review`'s raw findings (Step B) with the lens findings (Step C), the
 event-sourcing, concurrency, or data-delete, the verdict is `COMMENT` regardless of how small or
 clean it is — hold it for a human. No size or clarity earns an approve here.
 
-**Confidence gate — approve is not the default for a clean review.** An approval is a signal
-the team relies on to merge without a second look, so only spend it when you actually earned it.
-Approve only when BOTH hold; otherwise post `COMMENT` (findings if any, else a single inline note
+**Confidence gate — approve only when BOTH hold; otherwise `COMMENT`** (findings if any, else
 "looks fine, but too large/unfamiliar for me to rubber-stamp — worth a human pass"):
 - **Bounded scope.** The diff is small enough to have reviewed in full, not skimmed.
 - **Full understanding.** You followed every changed path — no "probably fine" on code you
   didn't actually trace.
 
-When in doubt, comment. A comment-only review with no blockers still lets the author merge; a
-wrong approval is the thing that erodes trust in the bot.
+Comment-only still lets the author merge; a wrong approval erodes trust.
 
 Never request changes — it hard-locks the branch until this exact reviewer clears it. Comment leaves the findings visible without blocking; the author decides.
 

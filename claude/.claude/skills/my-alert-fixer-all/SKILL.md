@@ -28,8 +28,7 @@ Scope is `<ORG>`. Each problem is independent heavy work; always fan out.
 - **Rank:** customer-facing impact > `severity` (critical > warning > info) > how long it's been
   firing > recurring count. `Watchdog`/`severity:none` and pure-`info` are never problems — drop them.
 - **Dedup:** read `~/.claude/daily-logs/runs.jsonl`; skip any `alertname` an `alerts` chore already
-  drafted a PR for or flagged in the last 7 days, unless it re-fired after a resolve. Don't re-surface
-  the same thing daily.
+   drafted a PR for or flagged in the last 7 days, unless it re-fired after a resolve.
 - Emit `max` problems (default 1), best first. None worth acting on → report the queue is quiet, stop.
 
 **Phase 2 — Fix (one agent per problem).** Fan out; each follows

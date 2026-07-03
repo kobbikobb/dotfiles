@@ -54,22 +54,17 @@ Not a worktree chore; a reporting pass. Read `runs.jsonl`, take every record sin
 `~/.claude/daily-logs/todo.md` (overwrite each run — it's a live worklist, not a log). Headless-safe:
 a plain file the cron can always write, no Slack, no token.
 
-Each item = one checkbox: `- [ ] <repo#number>(<url>) — <one line: what's on me>`. Source them from
-the **needs-me** + **deferred** fields across the records, plus every `approve` result with
-`heldForHuman:true` (clean but not auto-approved — on me or a teammate to give a human pass and
-merge; use its `impact` as the one-liner); **confirm each PR is still open first**
-(`gh pr view`) and drop any merged/closed so I don't chase stale items. Group: deferred vs needs-me.
-`alerts`/`verify` records have no PR of their own — list each lead as `- [ ] <alertname-or-service> —
-<needsMe>` (a `verify` lead already names its suspect PR url inside `needsMe`; an `alerts` draft spike
-PR is listed by its url like other PRs). Nothing to verify-open for these lead items.
-Top of the file: the date and the one-line tally. If nothing is on me, write a single line saying the
-queue's clear. Then append a marker line `{"ts":"...","chore":"summary"}` so the next summary doesn't
-repeat.
+Items are `- [ ] <url> — <one line: what's on me>`. Sources:
+- **needs-me / deferred** fields across all records
+- **`heldForHuman:true`** — clean but not auto-approved; `impact` = one-liner
+- **alerts/verify leads** — `<alertname-or-service>` with `needsMe` line
 
-I pick the file up with `/daily log` (below) — that's the skill side. If a Slack send-message tool is
-available in the run context (an authed session has the claude.ai Slack MCP; the headless cron has
-none), also post the same list to my **#todo** channel (`C0BCHFU263Y`). Best-effort: skip silently
-when no Slack tool is present. The plan file is the source of truth either way.
+Rules: **confirm each PR still open** (`gh pr view`), drop merged/closed. Group into `### Deferred`
+and `### Needs me`. Top: date + tally. Clear queue → "Nothing on me." Append
+`{"ts":"...","chore":"summary"}` marker line.
+
+If Slack MCP available in run context, also post to **#todo** (`C0BCHFU263Y`). Best-effort: skip
+silently when absent.
 
 ## log — review and talk it through (interactive only)
 
@@ -77,9 +72,7 @@ I run this myself in an open session. Read `~/.claude/daily-logs/todo.md` (the p
 for what's **still on me**, and `runs.jsonl` for the fuller context — what ran when, what was
 fixed/approved, anything that errored. Present it conversational, lead with the open items + URLs.
 Then stay in the loop — answer follow-ups, and if I say so, act: go live on a PR, address a deferred
-item, rerun a chore. An open session has my claude.ai Slack MCP, so if I want it pushed, post the
-list to **#todo** (`C0BCHFU263Y`). This is where the back-and-forth the scheduled runs can't have
-actually happens.
+item, rerun a chore. If Slack MCP available, post to **#todo** (`C0BCHFU263Y`).
 
 ## How work chores run (headless-safe)
 

@@ -20,7 +20,7 @@ existing PR skills; it posts nothing on its own beyond what those skills do.
    Address every note I'd agree with by editing code; commit and push the fixes.
 
 3. **Wait for CI.** Call `ScheduleWakeup` for +300s (reason: "my-build: pr-fixer pass after CI").
-   This ends the turn and re-wakes to continue — it's the only way to actually pause 5 minutes.
+   Ends turn, re-wakes after 5m.
 
 4. **Fix.** On wake, run `my-pr-fixer` on the same PR — follow
    `~/.claude/skills/my-pr-fixer/SKILL.md`: clear red CI, work through every review comment

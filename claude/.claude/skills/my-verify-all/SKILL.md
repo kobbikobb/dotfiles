@@ -19,8 +19,8 @@ Scope: `<ORG>` repos (derived from --org). Each merge is independent work; alway
 ## Workflow (this skill opts into the Workflow call)
 
 **Phase 1 — Triage (one agent).** Build the merge list and map services.
-- **Window:** yesterday (org local time) — but **on Monday, cover the whole weekend: since last Friday
-  00:00** (Fri+Sat+Sun), or nothing merged Friday gets verified. Same rule the digest uses.
+- **Window:** yesterday (org local time) — but **on Monday, cover since last Friday 00:00**,
+  or nothing merged Friday gets verified.
 - List merges in that window:
   `gh-axi search prs --merged --owner <ORG> <repo-flags> --merged-at <window> --json number,title,url,repository,mergedAt,files,body`
   (build `<repo-flags>` by listing the org's repos that host prod services — `--repo <ORG>/<app> --repo <ORG>/<gitops>` etc.).
