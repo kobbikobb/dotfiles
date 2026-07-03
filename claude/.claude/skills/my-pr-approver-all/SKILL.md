@@ -1,6 +1,6 @@
 ---
 name: my-pr-approver-all
-description: "Run my-pr-approver across the whole open PR queue, not just one PR. Default scope is the current repo (full engine per PR in-session). With --org <name>, fans out across every repo in the org (one deep sub-agent per PR, via a workflow). Posts both verdicts, then reports each PR's impact, anything to know, and a look-into-these list."
+description: "Run my-pr-approver across the whole open PR queue, not just one PR. Default scope is the current repo (full engine per PR in-session). With --org <name>, fans out across every repo in the org (one deep sub-agent per PR, via a workflow). Approves only clean reviews it fully understood on a bounded, familiar diff; everything else is comment-only. Posts both verdicts, then reports each PR's impact, anything to know, and a look-into-these list."
 disable-model-invocation: true
 ---
 
@@ -58,14 +58,16 @@ Scope is the current repo by default. `--org <name>` sweeps the whole org.
   waves, watch a metric, nothing), and **the risk** (blast radius + reversibility, e.g. "13 prod
   tenants, revertible"). Don't compress this to a bare tag — give me enough to decide without
   opening the PR.
-- **Look into these:** bare URLs for every `changes-requested` or `error` PR.
+- **Look into these:** bare URLs for every `commented` (has blockers) or `error` PR.
+- **Held for human:** bare URLs for every `heldForHuman` PR — clean reviews the gate wouldn't
+  rubber-stamp. These feed `summary` → `todo.md`/#todo as a human-merge queue.
 - **Whenever a line asks me to look at, confirm, or act on a PR, give the bare PR URL on that
   line** — never just a number/repo I have to go find. A clickable URL on every actionable item.
 - If everything was clean with no heads-up, say the queue is clear.
 
 ## Rules
 
-- **Post both verdicts.** Approve the clean, comment (never request-changes) on the rest. Both land on the PR.
+- **Post both verdicts.** Approve the clean, comment (never request-changes) on the rest. Both land on the PR. Approval is earned, not the default for a clean read — apply the engine's confidence gate (bounded, understood, familiar). A clean PR held for a human pass is comment-only; flag it in the report as "clean, held for human" so I know it wasn't rubber-stamped.
 - **Impact on every PR.** Always summarize what each PR does in one line, approved or not.
 - **Flag what I'd want to know even on approvals.** `headsUp` is for the things a clean approve
   still shouldn't bury: a DB migration, an auth/PII path, a breaking change, a big surface. When

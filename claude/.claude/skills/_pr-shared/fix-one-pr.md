@@ -9,7 +9,7 @@ returns a compact result. Inputs: `repo` (owner/name), `number`, `branch`, `url`
 1. **Isolated worktree** (parallel-safe — never touch the user's checkout or main):
    ```bash
    root=$(git -C <local-repo> rev-parse --show-toplevel)        # the repo for <repo>; clone if absent
-   wt="$root/../platform.worktrees/fix-<repo-as-dash>-<number>"
+    wt="$root/../worktrees/fix-<repo-as-dash>-<number>"
    git -C "$root" fetch -q origin <branch>
    git -C "$root" worktree add -q "$wt" "origin/<branch>" -B <branch>
    ```

@@ -8,6 +8,7 @@
 - **Reuse existing patterns and approaches.** If the repo has a utility, helper, workflow template, or convention that fits, use it. Don't reinvent.
 - **Call out flaws in existing patterns when you see them.** If the existing approach is wrong or outdated, say so explicitly instead of silently diverging. Propose the fix in the same PR or as a follow-up. Diverging silently creates inconsistency that future readers can't explain.
 - **Over-engineering is a bug.** Defence-in-depth, extra abstraction layers, speculative flexibility — if they're not earning their keep right now, cut them.
+- **Estimates are cheap, agents do the work.** Don't down-rank an approach because it's more effort, and treat any time/effort estimate with a grain of salt. Default to the best approach unless it's *both* a large amount of work *and* high risk. If you skip the best option, say so and why.
 
 ## Comments (applies to all file types — .ts, .tsx, .tf, .yml, Dockerfile, .sh, etc.)
 - **Default = no comment.** The code is the explanation. Names, structure, and tests carry the meaning.
@@ -31,14 +32,17 @@
 - Tests should be relevant and test behaviour, not implementation details.
 
 ## Git
+- **Use `gh-axi` instead of `gh`** for all GitHub operations (PRs, issues, runs, releases). Installed at `/opt/homebrew/bin/gh-axi`. Fall back to `gh` only if `gh-axi` lacks the needed subcommand.
+- **Always give the direct PR URL.** Every time you reference, list, or mention a PR, include its full clickable URL (e.g. `https://github.com/<org>/<repo>/pull/<n>`) — no bare `#1234`. Hard rule.
 - **PR descriptions: as lean as possible, plain language.** Ideally one sentence — the problem and the suggested fix — that anyone can grasp without being in the loop or reading the code. Always try to cut it shorter. No code walkthroughs, no file-by-file rundown, no internals. Add a line of detail only when the one-liner genuinely isn't enough; link the ticket/logs for the deep context instead of restating it.
+- **Every PR carries a risk rating: Low / Medium / High**, stated in the description with one line of reasoning. Rate on four axes — blast radius (what breaks if it's wrong), reversibility (clean rollback?), coverage (tested or verified?), exposure (prod data, secrets, money, deletes, infra, auth). High if any axis is bad (hard to reverse, broad blast radius, or unverified prod path); Medium if it touches shared code or one prod path but is revertible and partly covered; Low if isolated, easily reverted, covered or trivially verifiable, no sensitive surface.
 - When creating PRs, add labels: `bug` (fix), `enhancement` (feature/improvement), `upgrade` (dependency)
 - Use `gh pr edit <PR_NUMBER> --add-label "<label>"`
 - If branch has an issue key (e.g. `PROJ-1234-fix-bug`), prefix commits: `PROJ-1234: Summary`
 
 ## Jira
-- Jira CLI may be installed at `/opt/homebrew/bin/jira` on macOS
-- Create issues: `jira issue create -p <PROJECT> -t <Type> -s "summary" -b "description" --no-input`
+- **Use `jira-axi` instead of `acli jira`** for all Jira operations (issues, sprints, projects). Installed at `/opt/homebrew/bin/jira-axi`. Fall back to `acli jira` only if `jira-axi` lacks the needed subcommand.
+- Set `JIRA_AXI_PROJECT=<KEY>` env var or pass `--project <KEY>` / `-p <KEY>` to scope to a project.
 - Issue types: Bug, Task, Story
 - When creating PRs for fixes, create a corresponding Jira issue and link it in the PR description
 - Use Jira issue keys in branch names and commit messages

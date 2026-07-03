@@ -71,12 +71,13 @@ Merge `code-review`'s raw findings (Step B) with the lens findings (Step C), the
   capability-token endpoint whose tenant model is pre-existing and uniform; a "Major" on a
   defensive `x ? … : false` branch that never triggers because the caller always supplies
   `x`. Confirm the failing path is reachable in real code, or downgrade/drop it.
-- **Calibrate severity to the rubric, not to the verdict you want.** Don't inflate a finding
-  to manufacture a blocker. A missing test defaults to **Minor** unless the behavior is
-  otherwise unverified — an unmet brief promise is a process note, not a severity multiplier.
-  A new write/inject path that changes the threat model outranks a pre-existing-but-uniform
-  scoping model. Before posting, read the PR's own follow-up list (body + linked tickets):
-  flagging work the author already split out is noise.
+- **Calibrate severity to the rubric, not to the verdict you want — in either direction.**
+  Don't inflate to manufacture a blocker, and don't shave a real concern down to Minor just so
+  the PR can approve. A missing test on new behavior is **Major** when that behavior is otherwise
+  unverified; it's Minor only when the path is genuinely covered elsewhere. A new write/inject
+  path that changes the threat model outranks a pre-existing-but-uniform scoping model. Before
+  posting, read the PR's own follow-up list (body + linked tickets): flagging work the author
+  already split out is noise.
 - **Dedupe and merge per area** into one comment, never two on the same concern.
 - **Re-voice every comment as mine** (voice rules below). This step is the sole writer of
   comment text — no `code-review` wording, `path:line`, or footer reaches the PR.
@@ -91,7 +92,22 @@ Merge `code-review`'s raw findings (Step B) with the lens findings (Step C), the
 
 - Any **Risky** → comment (don't approve); note it likely needs a discussion.
 - Any **Major** (no Risky) → comment (don't approve).
-- Only **Minor/Nit**, or nothing → approve.
+- Only **Minor/Nit**, or nothing → approve **only if the confidence gate passes**; else comment.
+
+**Sensitive surfaces never auto-approve.** If the diff touches auth, migrations, money, PII,
+event-sourcing, concurrency, or data-delete, the verdict is `COMMENT` regardless of how small or
+clean it is — hold it for a human. No size or clarity earns an approve here.
+
+**Confidence gate — approve is not the default for a clean review.** An approval is a signal
+the team relies on to merge without a second look, so only spend it when you actually earned it.
+Approve only when BOTH hold; otherwise post `COMMENT` (findings if any, else a single inline note
+"looks fine, but too large/unfamiliar for me to rubber-stamp — worth a human pass"):
+- **Bounded scope.** The diff is small enough to have reviewed in full, not skimmed.
+- **Full understanding.** You followed every changed path — no "probably fine" on code you
+  didn't actually trace.
+
+When in doubt, comment. A comment-only review with no blockers still lets the author merge; a
+wrong approval is the thing that erodes trust in the bot.
 
 Never request changes — it hard-locks the branch until this exact reviewer clears it. Comment leaves the findings visible without blocking; the author decides.
 

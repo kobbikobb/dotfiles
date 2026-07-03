@@ -1,23 +1,23 @@
 ---
 name: daily
-description: "My daily driver: run recurring PR chores across my org, record what happened, summarize to Slack, and let me review + talk it through with `log`. Dumb orchestrator — every chore delegates to the existing -all skills' worktree sub-agents. Org-agnostic; the org lives in ~/.claude/work.local.json."
+description: "My daily driver: run recurring PR chores across my org, record what happened, distill what's on me into a plan file, and let me pick it up + talk it through with `log`. Dumb orchestrator — every chore delegates to the existing -all skills' worktree sub-agents. Org-agnostic; the org lives in ~/.claude/work.local.json."
 disable-model-invocation: true
 ---
 
 # Daily — my recurring chores, recorded, summarized, reviewable
 
 Run my recurring chores across my org, **write a record of every run**, and surface them two ways: a
-scheduled `summary` posts to Slack, and a manual `log` lets me review and talk it through. This skill
-holds nothing of its own — each chore delegates to an existing orchestrator that fans out to worktree
-sub-agents.
+scheduled `summary` distills what's on me into a plan file (`~/.claude/daily-logs/todo.md`), and a
+manual `log` lets me pick that up and talk it through. This skill holds nothing of its own — each
+chore delegates to an existing orchestrator that fans out to worktree sub-agents.
 
 `<ORG>` = `--org` if given, else `.org` from `~/.claude/work.local.json`, else ask.
 
-**Argument:** $ARGUMENTS — `[approve|fix|summary|all|log] [--live] [--org <name>]`. Selector defaults to `all`.
+**Argument:** $ARGUMENTS — `[approve|fix|alerts|verify|summary|all|log] [--live] [--org <name>]`. Selector defaults to `all`.
 **Safe by default: posts NOTHING to PRs unless `--live` is passed** (dry-run otherwise).
 
 **Run store:** `~/.claude/daily-logs/runs.jsonl` — one JSON line per chore run (real local file, not
-in dotfiles). This is the memory that ties scheduled runs, the Slack summary, and `log` together.
+in dotfiles). This is the memory that ties scheduled runs, the `summary` plan file, and `log` together.
 
 ## Work chores (run this order)
 
@@ -25,9 +25,19 @@ in dotfiles). This is the memory that ties scheduled runs, the Slack summary, an
    block teammates. Read `~/.claude/skills/my-pr-approver-all/SKILL.md`, run its org workflow.
 2. **fix** — `my-pr-fixer-all --org <ORG>`. Fix my own PRs (CI + owed review replies). Read
    `~/.claude/skills/my-pr-fixer-all/SKILL.md`, run its workflow.
+3. **alerts** — `my-alert-fixer-all --org <ORG>`. Triage firing prod alerts in Grafana (grafana MCP),
+   pick the biggest real problem, fan out a sub-agent to root-cause it and — only when confident —
+   open a draft spike PR; else hand back an investigation lead. Read
+   `~/.claude/skills/my-alert-fixer-all/SKILL.md`, run its workflow. `results` is its returned
+   per-problem array; its `needsMe` (investigate leads) feed `summary` exactly like `deferred` does.
+4. **verify** — `my-verify-all --org <ORG>`. Diff the prod health of every service-touching PR merged
+   yesterday (latency, errors, alerts, after-merge vs baseline) via Grafana, flag regressions as
+   confidence-scored leads. **Read-only — opens no PRs**, so `--live` is irrelevant to it. Read
+   `~/.claude/skills/my-verify-all/SKILL.md`, run its workflow. `results` is its per-merge array; its
+   `needsMe` (regression leads) feed `summary` like `deferred` does.
 
-`all` runs approve then fix. Add new chores here as one numbered section each (e.g. a future
-**alerts** chore: triage Grafana alerts via the grafana MCP + sub-agents).
+`all` runs approve then fix (not alerts/verify — different cadence/risk; run those on their own
+selectors). Add new chores here as one numbered section each.
 
 ### After each work chore — record it
 Append one line to `~/.claude/daily-logs/runs.jsonl`:
@@ -37,23 +47,39 @@ Append one line to `~/.claude/daily-logs/runs.jsonl`:
 `results` is the raw structured array from the orchestrator — keep it, it's what `summary`/`log`
 read. Then print the normal digest to stdout (below).
 
-## summary — post today's activity to Slack
+## summary — write today's action items to a plan file
 
 Not a worktree chore; a reporting pass. Read `runs.jsonl`, take every record since the last
-`summary` marker (or since 00:00 if none), and post one Slack message to me with:
-- per chore: how many PRs reviewed/fixed, verdicts/fixes, and the **needs-me** + **deferred** items
-  (these are what I act on), with PR URLs;
-- whether runs were dry-run or live.
-Use the Slack MCP (`slack_send_message` to my own DM). Then append a marker line
-`{"ts":"...","chore":"summary"}` so the next summary doesn't repeat. Keep it skimmable on a phone.
+`summary` marker (or since 00:00 if none), and write the open action items to the plan file
+`~/.claude/daily-logs/todo.md` (overwrite each run — it's a live worklist, not a log). Headless-safe:
+a plain file the cron can always write, no Slack, no token.
+
+Each item = one checkbox: `- [ ] <repo#number>(<url>) — <one line: what's on me>`. Source them from
+the **needs-me** + **deferred** fields across the records, plus every `approve` result with
+`heldForHuman:true` (clean but not auto-approved — on me or a teammate to give a human pass and
+merge; use its `impact` as the one-liner); **confirm each PR is still open first**
+(`gh pr view`) and drop any merged/closed so I don't chase stale items. Group: deferred vs needs-me.
+`alerts`/`verify` records have no PR of their own — list each lead as `- [ ] <alertname-or-service> —
+<needsMe>` (a `verify` lead already names its suspect PR url inside `needsMe`; an `alerts` draft spike
+PR is listed by its url like other PRs). Nothing to verify-open for these lead items.
+Top of the file: the date and the one-line tally. If nothing is on me, write a single line saying the
+queue's clear. Then append a marker line `{"ts":"...","chore":"summary"}` so the next summary doesn't
+repeat.
+
+I pick the file up with `/daily log` (below) — that's the skill side. If a Slack send-message tool is
+available in the run context (an authed session has the claude.ai Slack MCP; the headless cron has
+none), also post the same list to my **#todo** channel (`C0BCHFU263Y`). Best-effort: skip silently
+when no Slack tool is present. The plan file is the source of truth either way.
 
 ## log — review and talk it through (interactive only)
 
-I run this myself in an open session. Read recent `runs.jsonl` records and present, conversational:
-what ran and when, what was fixed/approved, what's **still on me** (deferred + needs-me, with URLs),
-and anything that errored. Then stay in the loop — answer follow-ups, and if I say so, act: go live
-on a PR, address a deferred item, rerun a chore. This is where the back-and-forth the scheduled runs
-can't have actually happens.
+I run this myself in an open session. Read `~/.claude/daily-logs/todo.md` (the plan `summary` wrote)
+for what's **still on me**, and `runs.jsonl` for the fuller context — what ran when, what was
+fixed/approved, anything that errored. Present it conversational, lead with the open items + URLs.
+Then stay in the loop — answer follow-ups, and if I say so, act: go live on a PR, address a deferred
+item, rerun a chore. An open session has my claude.ai Slack MCP, so if I want it pushed, post the
+list to **#todo** (`C0BCHFU263Y`). This is where the back-and-forth the scheduled runs can't have
+actually happens.
 
 ## How work chores run (headless-safe)
 
@@ -79,3 +105,6 @@ and `DRY-RUN — nothing posted.` when `--live` is absent. Empty queues → say 
   `log` go blind. The record is the product as much as the PR change.
 - **Delegate, never reimplement.** A chore is a thin call into an existing -all orchestrator. New
   logic goes there or in a shared script, not here. This skill stays dumb.
+- **Every PR I name carries its URL.** Any line that points me at a PR — in `log`, the `todo.md`
+  plan, the #todo post, the stdout digest — gives the clickable `https://github.com/<owner>/<repo>/pull/<n>`
+  on that line, never a bare `repo#number` I have to go find.

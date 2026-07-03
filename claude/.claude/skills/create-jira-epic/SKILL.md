@@ -1,6 +1,6 @@
 ---
 name: create-jira-epic
-description: Create a well-scoped Jira epic via acli. Use when the user asks to create/draft/plan an epic. Defaults to the project in ~/.claude/work.local.json, applies an epic quality checklist, and creates it with the shared jira-create.sh script.
+description: Create a well-scoped Jira EPIC via jira-axi — a large body of work spanning multiple stories (a feature, initiative, or multi-phase project). Use when the user asks to create/draft/plan an epic, or to plan a multi-story effort/roadmap in Jira. For a single piece of work under an epic use create-jira-story. Defaults to the project in ~/.claude/work.local.json, applies an epic quality checklist, creates via the shared jira-create.sh script.
 ---
 
 # Create a Jira epic
@@ -13,7 +13,7 @@ description: Create a well-scoped Jira epic via acli. Use when the user asks to 
 
 ## Before creating
 1. **Search for an existing epic or parent first** — don't duplicate. If one exists, reparent into it instead of making a new epic:
-   `acli jira workitem search --jql 'project = <PROJECT> AND issuetype = Epic AND summary ~ "<keywords>"' --fields key,summary,status --csv`
+   `jira-axi issue list --jql 'project = <PROJECT> AND issuetype = Epic AND summary ~ "<keywords>"'`
 2. Confirm scope with the user if ambiguous.
 
 ## Quality checklist (the epic description must have)
@@ -26,7 +26,7 @@ description: Create a well-scoped Jira epic via acli. Use when the user asks to 
 - **No liability language** — don't write "contractually obligated" / blame; that's CS/Legal's call. Use neutral wording ("the delivery we commit to").
 
 ## Create it
-Write the description to a file, then:
+`jira-axi issue create` only takes `--project/--summary/--type`, so creation goes through `jira-create.sh` (acli) for label and description-file support. Write the description to a file, then:
 ```
 ~/.claude/scripts/jira-create.sh --type Epic \
   --summary "<short outcome-focused title>" \
@@ -35,8 +35,8 @@ Write the description to a file, then:
 ```
 (Pass `--project <PROJECT>` unless it equals the script's own default.)
 
-## After creating — acli limits
-acli here **cannot set start/due dates or assignee**. Tell the user to set those in the Jira UI, and give exact values (owner name, start date, due date). To fetch an accountId for reference:
+## After creating — known limits
+Creation here **cannot set start/due dates or assignee** (acli can't write `duedate`/`customfield_10015` or any custom field via `edit`). Set dates in the Jira **Timeline/Plans UI**, and assignee in the Jira UI; give the user exact values. To fetch an accountId for reference (acli — jira-axi doesn't surface accountId):
 `acli jira workitem search --jql 'assignee = "<email>"' --fields assignee --json`
 
 ## Optional review pass

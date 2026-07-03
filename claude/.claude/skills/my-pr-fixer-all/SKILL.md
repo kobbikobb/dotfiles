@@ -61,7 +61,7 @@ One compact block per PR, in this exact shape — no tables, no per-file rundown
 - **Sub-agents don't ask.** Auto-fix low-risk only; high-risk goes to `deferred`, never blocks. The
   whole point of fan-out is an unattended pass — an agent that stalls waiting for input is a bug.
 - **Isolated worktrees only.** Never let an agent fix a PR in my working checkout or on main; each
-  gets its own worktree under `platform.worktrees/`, removed when done (see [[worktree-per-task]]).
+  gets its own worktree under `worktrees/`, removed when done (see [[worktree-per-task]]).
 - **Skip and report, don't guess.** A PR whose worktree/fetch/push fails is `status:"error"` and
   goes on the needs-me list. Never half-push.
 - **Never weaken tests, never edit CI to go green** — these carry through from `my-pr-fixer`; the
