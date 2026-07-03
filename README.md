@@ -39,3 +39,15 @@ cd ~/dotfiles && stow -t ~ claude
 ```
 
 Files kept as-is in `~/.claude/commands/`: `ship-with-issue.md`, `gsd/`
+
+## CLI tools the Claude config expects
+
+The global `~/.claude/CLAUDE.md` and the Jira skills default to [`jira-axi`](https://github.com/kobbikobb/jira-axi) (a leaner `acli` wrapper). Install and set it up:
+
+```bash
+npm install -g jira-axi   # needs Node 18+ and acli already installed
+acli auth login           # jira-axi authenticates through acli
+jira-axi setup            # agent setup
+```
+
+jira-axi handles reads/searches (`jira-axi issue list --jql '…'`, `issue view`, `issue comment`). Rich creation (parent, labels, description files) still runs through `~/.claude/scripts/jira-create.sh`, which wraps `acli` because `jira-axi issue create` only takes `--project/--summary/--type`.

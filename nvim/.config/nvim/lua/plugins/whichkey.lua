@@ -1,6 +1,7 @@
 return {
 	"folke/which-key.nvim",
 	event = "VimEnter",
+	dependencies = { { "echasnovski/mini.icons", opts = {} } },
 	opts = {
 		delay = 0,
 		icons = {

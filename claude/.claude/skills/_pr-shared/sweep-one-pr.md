@@ -24,8 +24,11 @@ PR against a local checkout and returns a structured verdict. Inputs: `repo` (ow
    engine's severity rubric and voice rules. (Do NOT invoke the `code-review` skill — its
    background finders orphan when nested in a sub-agent. Do the correctness pass by hand here.)
 
-3. **Decide the verdict** — any Risky or Major → `REQUEST_CHANGES`; only Minor/Nit or clean →
-   `APPROVE`. Never approve a draft (shouldn't reach you; bail if so).
+3. **Decide the verdict** (engine Step E — never `REQUEST_CHANGES`) — any Risky or Major →
+   `COMMENT`. Sensitive surface (auth, migrations, money, PII, event-sourcing, concurrency,
+   data-delete) → `COMMENT` + `heldForHuman:true`, no matter how small/clean. Only Minor/Nit or
+   clean → `APPROVE` **only if the confidence gate passes** (bounded scope, fully understood);
+   else `COMMENT` + `heldForHuman:true`. Never approve a draft (shouldn't reach you; bail if so).
 
 4. **Post** (skip entirely if `dryRun`) — one review, engine posting mechanics: **empty body,
    inline comments only**, severity-prefixed, lean voice (short, clipped scenario, one ask).
@@ -40,8 +43,9 @@ PR against a local checkout and returns a structured verdict. Inputs: `repo` (ow
   "repo": "owner/name",
   "number": 123,
   "url": "https://github.com/...",
-  "verdict": "approved" | "changes-requested" | "error",
+  "verdict": "approved" | "commented" | "error",
   "blockerCount": 0,            // Risky + Major count
+  "heldForHuman": false,        // clean review (no blockers) held from approve by the confidence gate — a #todo item
   "impact": "one plain line: what this PR changes and who/what it affects",
   "headsUp": "anything I should know even if approved, else null. When set, cover three things in plain prose: WHAT I NEED TO KNOW (the surface/change that matters — migration, auth/PII path, breaking change, broad blast radius, sketchy area), WHAT ACTION TO TAKE (confirm a plan, merge in waves, watch a metric, coordinate a deploy, or nothing), and THE RISK (blast radius + reversibility, e.g. '13 prod tenants, revertible'). Enough that I can decide without opening the PR.",
   "reviewUrl": "the posted review URL, or null on dry-run/error"

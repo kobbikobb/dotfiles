@@ -1,6 +1,6 @@
 ---
 name: my-pr-approver
-description: "Review a PR in my voice and submit a verdict. Runs the shared review engine, posts severity-prefixed inline comments, then approves (all Minor/Nit) or comments without approving (any Risky/Major). Never requests changes — a bot shouldn't hold the branch lock."
+description: "Review a PR in my voice and submit a verdict. Runs the shared review engine, posts severity-prefixed inline comments, then approves only a clean review it fully understood on a bounded, familiar diff — else comments without approving. Never requests changes — a bot shouldn't hold the branch lock."
 disable-model-invocation: true
 ---
 
@@ -26,7 +26,8 @@ Comments read as my own: humble, question-led, no agent tells.
 2. Map the verdict to a review event. Never emit `REQUEST_CHANGES` — it hard-locks the branch until this exact reviewer clears it, which a bot should never hold. `COMMENT` leaves every finding visible without blocking; the author decides what to act on. CI is the only hard gate.
    - Any **Risky** → `COMMENT`; lead the relevant inline comment with the note that it likely needs a discussion first.
    - Any **Major** (no Risky) → `COMMENT`.
-   - Only **Minor/Nit**, or nothing → `APPROVE`.
+   - **Sensitive surface** (auth, migrations, money, PII, event-sourcing, concurrency, data-delete) → `COMMENT`, no matter how small/clean.
+   - Only **Minor/Nit**, or nothing → `APPROVE` **only if the engine's confidence gate passes** (bounded scope, fully understood); otherwise `COMMENT`. When you withhold approval on a clean review, say why in chat: clean but too large/sensitive to rubber-stamp.
 3. Post a single review with that `event` using the posting mechanics in the engine. The
    review `body` is always empty — every finding is an inline comment on the line it's about.
    No central summary, no severity counts, no off-diff notes on the PR. Off-diff findings

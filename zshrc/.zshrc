@@ -24,8 +24,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 
-# TODO: Check not needed?
-if [[ -f "$HOME/.oh-my-zsh/custom/themes/powerlevel10k/.zsh-theme" ]]; then
+if [[ -f "$HOME/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
   ZSH_THEME="powerlevel10k/powerlevel10k"
 else
   ZSH_THEME="robbyrussell"
@@ -239,11 +238,15 @@ export PATH="$HOME/bin:$PATH"
 export DS_BASE_PATH=/Users/jakobjonasson/work/devops-scripts
 export PATH=$PATH:$DS_BASE_PATH/bin
 eval "$(ds --show-completions-zsh)"
-export DS_BASE_PATH=/Users/jakobjonasson/work/devops-scripts
-export PATH=$PATH:$DS_BASE_PATH/bin
-eval "$(ds --show-completions-zsh)"
 
+export HOMEBREW_GITHUB_API_TOKEN=$(gh auth token)
 export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
+
+if command -v pim &> /dev/null; then eval "$(pim --show-completions-zsh)"; fi
+
+cred() {
+    ds k8s get-credentials
+}
 
 # Entra ID PostgreSQL token
 pgtoken() {

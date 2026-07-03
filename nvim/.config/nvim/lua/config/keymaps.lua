@@ -30,6 +30,9 @@ vim.keymap.set("n", "<leader>TN", "<cmd>tabn<CR>", { desc = "Go to next tab" })
 vim.keymap.set("n", "<leader>Tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
 vim.keymap.set("n", "<leader>Tb", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
 
+-- Git
+vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen HEAD~1..HEAD<CR>", { desc = "Diff last commit" })
+
 -- Disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
