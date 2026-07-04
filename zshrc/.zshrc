@@ -208,7 +208,6 @@ elif [[ -d "/usr/lib/jvm" ]]; then
 fi
 [[ -n "$JAVA_HOME" ]] && export PATH="$JAVA_HOME/bin:$PATH"
 
-
 # Load extra environment variables
 [[ -f "$HOME/zshrc.env" ]] && source "$HOME/zshrc.env"
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
@@ -217,14 +216,6 @@ alias k=kubectl
 alias kc=kubectx
 alias kn=kubens
 alias yolo="claude --dangerously-skip-permissions"
-
-colima-fix() {
-  colima stop --force
-  colima delete --force
-  limactl disk unlock colima 2>/dev/null
-  colima start --memory 12 --cpu 4
-}
-
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -237,12 +228,22 @@ fi
 export PATH="$HOME/bin:$PATH"
 export DS_BASE_PATH=/Users/jakobjonasson/work/devops-scripts
 export PATH=$PATH:$DS_BASE_PATH/bin
-eval "$(ds --show-completions-zsh)"
+if command -v ds &> /dev/null; then
+  eval "$(ds --show-completions-zsh)"
+fi
 
 export HOMEBREW_GITHUB_API_TOKEN=$(gh auth token)
 export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
 
-if command -v pim &> /dev/null; then eval "$(pim --show-completions-zsh)"; fi
+
+## Start Methods
+
+colima-fix() {
+  colima stop --force
+  colima delete --force
+  limactl disk unlock colima 2>/dev/null
+  colima start --memory 12 --cpu 4
+}
 
 cred() {
     ds k8s get-credentials
@@ -256,3 +257,32 @@ pgtoken() {
   echo "Token copied for: $account"
   echo "Expires in ~1 hour"
 }
+
+git-worktree-checkout() {
+  local branch="$1"
+
+  if [[ -z "$branch" ]]; then
+    echo "Usage: git-worktree-checkout <branch>"
+    return 1
+  fi
+
+  # Find worktree that already has this branch checked out
+  local wt
+  wt=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+    /^worktree / { w = $2 }
+    /^branch / && $2 == b { print w }
+  ')
+
+  # If found, remove it (forcefully)
+  if [[ -n "$wt" ]]; then
+    echo "Removing existing worktree for branch '$branch': $wt"
+    git worktree remove --force "$wt" || return 1
+  fi
+
+  # Now safe to checkout
+  git checkout "$branch"
+}
+
+## End Methods
+
+if command -v pim &> /dev/null; then eval "$(pim --show-completions-zsh)"; fi
