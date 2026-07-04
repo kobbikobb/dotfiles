@@ -226,6 +226,35 @@ return {
 			},
 		})
 
+		-- Configure rust_analyzer with inlay hints and clippy
+		vim.lsp.config("rust_analyzer", {
+			capabilities = capabilities,
+			settings = {
+				["rust-analyzer"] = {
+					cargo = {
+						allFeatures = true,
+					},
+					check = {
+						command = "clippy",
+					},
+					inlayHints = {
+						bindingModeHints = { enable = true },
+						closureCaptureHints = { enable = true },
+						closureReturnTypeHints = { enable = "always" },
+						discriminantHints = { enable = "always" },
+						expressionAdjustmentHints = { enable = "always" },
+						implicitDrops = { enable = true },
+						lifetimeElisionHints = { enable = "always" },
+						parameterHints = { enable = true },
+						reborrowHints = { enable = "always" },
+						renderColoring = true,
+						typeHints = { enable = true },
+					},
+					procMacro = { enable = true },
+				},
+			},
+		})
+
 		-- Configure all other language servers with default settings
 		local servers = {
 			"ts_ls",
@@ -240,7 +269,6 @@ return {
 			"helm_ls",
 			"dockerls",
 			"bashls",
-			"rust_analyzer",
 			"sourcekit", -- Swift; ships with Xcode/CommandLineTools, not Mason
 		}
 
@@ -251,6 +279,6 @@ return {
 		end
 
 		-- Enable all configured LSP servers
-		vim.lsp.enable({ "lua_ls", "kotlin_language_server", "basedpyright", "ruff", "yamlls", unpack(servers) })
+		vim.lsp.enable({ "lua_ls", "kotlin_language_server", "basedpyright", "ruff", "yamlls", "rust_analyzer", unpack(servers) })
 	end,
 }

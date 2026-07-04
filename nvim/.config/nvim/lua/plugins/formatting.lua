@@ -38,6 +38,7 @@ return {
 				kotlin = { "ktlint" },
 				swift = { "swiftformat" },
 				terraform = { "terraform_fmt" },
+				rust = { "rustfmt", lsp_fallback = true },
 				yaml = { "yamlfmt" },
 			},
 		})

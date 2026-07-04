@@ -50,6 +50,7 @@ return {
 					"debugpy",
 					"roslyn",
 					"swiftformat",
+					"codelldb",
 				},
 				auto_update = true,
 				run_on_start = true,

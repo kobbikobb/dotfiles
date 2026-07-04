@@ -31,6 +31,7 @@ return {
 			"json",
 			"graphql",
 			"css",
+			"rust",
 			"sql",
 		}
 
