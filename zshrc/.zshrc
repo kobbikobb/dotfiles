@@ -254,6 +254,7 @@ alias k=kubectl
 alias kc=kubectx
 alias kn=kubens
 alias yolo="claude --dangerously-skip-permissions"
+alias stats="gh pr-dash"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -274,7 +275,7 @@ export HOMEBREW_GITHUB_API_TOKEN=$(gh auth token)
 export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
 
 
-## Start Methods
+## Methods
 
 colima-fix() {
   colima stop --force
