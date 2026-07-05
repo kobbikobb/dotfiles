@@ -150,6 +150,10 @@ alias ls=eza --icons
 alias n=nvim
 alias diff=lazygit
 alias cat=bat
+alias k='kubectl'
+
+### Git Utilities
+
 alias gcm='git switch main && git pull --rebase origin main'
 alias grm='git fetch origin && git rebase origin/main'
 alias gpf='git push --force-with-lease'
@@ -157,7 +161,19 @@ alias gs='git status'
 alias ga='git add -p'
 alias gc='git commit'
 alias gp='git push'
-alias k='kubectl'
+
+pr() {
+  local branch="$1"
+  if [[ -z "$branch" ]]; then
+    echo "Usage: pr <branch-name>"
+    return 1
+  fi
+  git checkout -b "$branch"
+  git add -A
+  git commit -m "commit for $branch"
+  git push -u origin "$branch"
+  gh pr create --fill
+}
 
 git_worktree_clean() {
   git worktree prune
@@ -165,6 +181,28 @@ git_worktree_clean() {
     git worktree remove --force "$wt" 2>/dev/null
   done
   git worktree prune
+}
+
+git-worktree-checkout() {
+  local branch="$1"
+
+  if [[ -z "$branch" ]]; then
+    echo "Usage: git-worktree-checkout <branch>"
+    return 1
+  fi
+
+  local wt
+  wt=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+    /^worktree / { w = $2 }
+    /^branch / && $2 == b { print w }
+  ')
+
+  if [[ -n "$wt" ]]; then
+    echo "Removing existing worktree for branch '$branch': $wt"
+    git worktree remove --force "$wt" || return 1
+  fi
+
+  git checkout "$branch"
 }
 
 # Enable vi keybindings in zsh
@@ -256,31 +294,6 @@ pgtoken() {
   echo "$token" | pbcopy
   echo "Token copied for: $account"
   echo "Expires in ~1 hour"
-}
-
-git-worktree-checkout() {
-  local branch="$1"
-
-  if [[ -z "$branch" ]]; then
-    echo "Usage: git-worktree-checkout <branch>"
-    return 1
-  fi
-
-  # Find worktree that already has this branch checked out
-  local wt
-  wt=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
-    /^worktree / { w = $2 }
-    /^branch / && $2 == b { print w }
-  ')
-
-  # If found, remove it (forcefully)
-  if [[ -n "$wt" ]]; then
-    echo "Removing existing worktree for branch '$branch': $wt"
-    git worktree remove --force "$wt" || return 1
-  fi
-
-  # Now safe to checkout
-  git checkout "$branch"
 }
 
 ## End Methods
