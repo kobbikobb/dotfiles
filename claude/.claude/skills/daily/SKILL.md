@@ -59,12 +59,46 @@ Items are `- [ ] <url> — <one line: what's on me>`. Sources:
 - **`heldForHuman:true`** — clean but not auto-approved; `impact` = one-liner
 - **alerts/verify leads** — `<alertname-or-service>` with `needsMe` line
 
-Rules: **confirm each PR still open** (`gh pr view`), drop merged/closed. Group into `### Deferred`
-and `### Needs me`. Top: date + tally. Clear queue → "Nothing on me." Append
-`{"ts":"...","chore":"summary"}` marker line.
+Rules:
+- File header: `# Daily — <YYYY-MM-DD>\n\nLast run: <HH:MM> UTC\n`. **Blank line after header.**
+- Per-chore section: `### <emoji chore-name>` (approve=📋, fix=🔧, alerts=🚨, verify=🔍). **One blank line between sections.**
+- Items: `- [ ] <url> — <author>: <one-liner reason>` per item. Source tag prefix: `[approve]`, `[fix]`, `[alert]`, `[verify]` — match source channel. Group by section header.
+- Under each section, bullets **sorted oldest-first**. Tally line under section: `Subtotal: n items`. If 0 items → "Queue clean ✓" (no bullets).
+- Final tally block after all sections: `---\nTALLY: <approved> approved · <changes> request-changes · <fixed> fixed · <needs-me> on me · <errors> errors`
+- Clear queue → "Nothing on me." Append `{"ts":"...","chore":"summary"}` marker line.
 
-If Slack MCP available in run context, also post to **#todo** (`C0BCHFU263Y`). Best-effort: skip
-silently when absent.
+Examples:
+
+```markdown
+# Daily — 2026-07-01
+
+Last run: 14:32 UTC
+
+### 📋 approve
+
+- [ ] https://github.com/org/repo/pull/42 — alice: update deps `[approve]`
+- [ ] https://github.com/org/repo/pull/38 — bob: fix lint `[approve]`
+
+Subtotal: 2 items
+
+### 🔧 fix
+
+- [ ] https://github.com/org/repo/pull/35 — charlie: CI green, needs my reply `[fix]`
+- [ ] https://github.com/org/repo/pull/29 — me: held for review `[fix]`
+
+Subtotal: 2 items
+
+### 🚨 alerts
+
+- [ ] Alertname=CPUThrottle, Service=api-gateway, needsMe=root-cause latency spike `[alert]`
+
+Subtotal: 1 items
+
+---
+TALLY: 3 approved · 0 request-changes · 1 fixed · 3 on me · 0 errors
+```
+
+If Slack MCP available in run context, also post to **#todo** (`C0BCHFU263Y`). Best-effort: skip silently when absent.
 
 ## log — review and talk it through (interactive only)
 
