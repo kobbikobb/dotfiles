@@ -9,7 +9,9 @@ return {
 		"marilari88/neotest-vitest",
 		"kobbikobb/neotest-gradle",
 		"nvim-neotest/neotest-python",
-		"Issafalcon/neotest-dotnet",
+		{ "Issafalcon/neotest-dotnet", build = function()
+			vim.fn.system("git apply " .. vim.fn.stdpath("config") .. "/patches/neotest-dotnet-fix.patch 2>/dev/null")
+		end },
 		"mfussenegger/nvim-dap-python",
 	},
 	config = function()

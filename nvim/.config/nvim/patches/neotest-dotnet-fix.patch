@@ -1,0 +1,39 @@
+diff --git a/lua/neotest-dotnet/init.lua b/lua/neotest-dotnet/init.lua
+index 8ff806b..2a4ede1 100644
+--- a/lua/neotest-dotnet/init.lua
++++ b/lua/neotest-dotnet/init.lua
+@@ -136,6 +136,10 @@ DotnetNeotestAdapter.build_spec = function(args)
+ 
+   local specs = build_spec_utils.create_specs(args.tree, nil, additional_args)
+ 
++  if not specs then
++    return nil
++  end
++
+   logger.debug("neotest-dotnet: Created " .. #specs .. " specs, with contents: ")
+   logger.debug(specs)
+ 
+@@ -161,6 +165,10 @@ end
+ ---@param tree neotest.Tree
+ ---@return neotest.Result[]
+ DotnetNeotestAdapter.results = function(spec, _, tree)
++  if not spec.context then
++    return {}
++  end
++
+   local output_file = spec.context.results_path
+ 
+   logger.debug("neotest-dotnet: Fetching results from neotest tree (as list): ")
+diff --git a/lua/neotest-dotnet/utils/build-spec-utils.lua b/lua/neotest-dotnet/utils/build-spec-utils.lua
+index d616370..b814cff 100644
+--- a/lua/neotest-dotnet/utils/build-spec-utils.lua
++++ b/lua/neotest-dotnet/utils/build-spec-utils.lua
+@@ -131,7 +131,7 @@ function BuildSpecUtils.create_specs(tree, specs, dotnet_additional_args)
+     end
+   end
+ 
+-  return #specs < 0 and nil or specs
++  return #specs == 0 and nil or specs
+ end
+ 
+ return BuildSpecUtils
