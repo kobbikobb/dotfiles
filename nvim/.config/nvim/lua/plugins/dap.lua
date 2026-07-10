@@ -56,7 +56,7 @@
 			"mason-org/mason.nvim",
 		},
 		opts = {
-			ensure_installed = { "python" },
+			ensure_installed = { "python", "netcoredbg" },
 		},
 	},
 	{

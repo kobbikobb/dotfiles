@@ -9,6 +9,7 @@ return {
 		"marilari88/neotest-vitest",
 		"kobbikobb/neotest-gradle",
 		"nvim-neotest/neotest-python",
+		"Issafalcon/neotest-dotnet",
 		"mfussenegger/nvim-dap-python",
 	},
 	config = function()
@@ -35,6 +36,8 @@ return {
 				return require("utils").get_python_path()
 			end,
 		}))
+
+		table.insert(adapters, require("neotest-dotnet"))
 
 		require("neotest").setup({
 			adapters = adapters,

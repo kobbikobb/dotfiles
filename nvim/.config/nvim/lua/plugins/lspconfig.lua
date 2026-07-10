@@ -24,6 +24,9 @@ return {
 				opts.desc = "Show LSP definitions"
 				keymap.set("n", "gd", vim.lsp.buf.definition, opts)
 
+				opts.desc = "Go to implementation"
+				keymap.set("n", "gI", vim.lsp.buf.implementation, opts)
+
 				opts.desc = "Show LSP type definitions"
 				keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
 

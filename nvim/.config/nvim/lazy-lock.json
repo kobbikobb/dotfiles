@@ -32,6 +32,7 @@
   "mini.icons": { "branch": "main", "commit": "24dbea2195c477e57d581215839a6ab915f34b14" },
   "move-lines.nvim": { "branch": "main", "commit": "df67ca2062e79002968f10ca9b4142cdd3639955" },
   "neotest": { "branch": "master", "commit": "fb84d87285698f7055f618083c351984449119b8" },
+  "neotest-dotnet": { "branch": "main", "commit": "e27c67a856ce67cc968b773d01a35ec07459bb8b" },
   "neotest-gradle": { "branch": "main", "commit": "ba0d6717fe995d5de9f52406b133b148480cb10e" },
   "neotest-jest": { "branch": "main", "commit": "0e7979d51301dfae5ef839d771bd28cf593fde3f" },
   "neotest-python": { "branch": "master", "commit": "51c453d57f8d5156671b42ea57fafa2e1c9fb641" },

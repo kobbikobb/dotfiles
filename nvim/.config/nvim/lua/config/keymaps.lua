@@ -33,6 +33,16 @@ vim.keymap.set("n", "<leader>Tb", "<cmd>tabnew %<CR>", { desc = "Open current bu
 -- Git
 vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen HEAD~1..HEAD<CR>", { desc = "Diff last commit" })
 
+-- C# / dotnet build
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "cs",
+	callback = function()
+		vim.bo.makeprg = "dotnet build"
+		vim.keymap.set("n", "<leader>mb", ":make<CR>", { buffer = true, desc = "Build C# project" })
+		vim.keymap.set("n", "<leader>mr", ":!dotnet run<CR>", { buffer = true, desc = "Run C# project" })
+	end,
+})
+
 -- Disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
